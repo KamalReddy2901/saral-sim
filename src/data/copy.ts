@@ -71,7 +71,7 @@ export const copy = {
     ],
   },
   load: {
-    title: "Load a passage",
+    title: "Pick a passage",
     sub: "Passages go in on a USB stick. Choose a sample passage.",
     selectLabel: "Sample passage",
     counter: "words",
@@ -99,7 +99,7 @@ export const copy = {
     online: "Cable in: the device still sends nothing, because there is no cloud code in the pipeline.",
   },
   ai: {
-    title: "The local AI runs",
+    title: "Run the pipeline",
     run: "Run",
     rerun: "Run again",
     skip: "Skip animation",
@@ -152,7 +152,7 @@ export const copy = {
     libraryNote: "Library: original icons drawn for this project.",
   },
   learner: {
-    title: "The learner screen",
+    title: "Try it yourself",
     fullscreen: "Full-screen view",
     close: "Close",
     hint: "This is the real learner interface. Use touch, mouse or keyboard: Space or Enter for the main action, arrow keys for back and next.",
@@ -203,7 +203,7 @@ export const copy = {
     "Use it the way a learner would: touch, mouse or keyboard. Open it full screen on a phone.",
     "Numbers marked Simulated are placeholders until they are measured on the Raspberry Pi.",
     "One real sentence from the water cycle passage, before and after.",
-    "Replace the placeholders in the credits config before sharing the link.",
+    "Every font, library and picture is listed with its licence. Nothing is loaded from the internet.",
   ],
   fallback2d: "3D is not available here, so you are seeing the 2D guided view. Everything still works.",
 } as const;

@@ -464,3 +464,69 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; border-radius
 .ex { margin: 1.2rem 0; }
 .page-body .map-grid { margin-top: 0.4rem; }
 @media (max-width: 899px) { .app[data-span="1"] .side { grid-column: 1; grid-row: 3 / span 2; padding: 6px; } }
+
+/* ====================== polish pass: consistency ====================== */
+/* control heights: small 36, regular 40 */
+.ghost-btn, .chip-btn, .tool, .seg button { min-height: 36px; }
+.primary-btn, .btn, .vp-nav .ghost-btn { min-height: 40px; }
+.btn-sm { min-height: 36px; }
+.icon-btn { width: 34px; height: 34px; }
+.head { padding-top: 0; }
+.head-tools .ghost-btn { min-height: 34px; }
+
+/* panels: one rhythm */
+.panel-kicker { display: block; margin-bottom: 0.45rem; color: var(--dim); }
+.panel-title { font-size: 28px; line-height: 1.12; margin-bottom: 0.9rem; }
+.panel-inner { padding: 1.4rem 1.4rem 2.4rem; }
+.panel p { max-width: 62ch; text-wrap: pretty; }
+.panel p + p { margin-top: 0.7rem; }
+.panel .muted, .panel p.muted { font-size: 14.5px; line-height: 1.55; }
+.btn-row { margin: 1rem 0 0.4rem; }
+.parts { margin-top: 1rem; }
+.stages li, .part, .cands li, .gauge, .map-row, .aids li, .ex-card, .three li, .res-table, .ba-block, .how, .limit, .facts li, .modelcard, .kv { border-radius: 12px; }
+
+/* rail: calmer note, sticky key hint, tidy list spacing */
+.tour-note { margin: 0.8rem 0.7rem 0; padding: 0.75rem 0.85rem; border-radius: 12px; }
+.tour-note p { font-size: 12.5px; line-height: 1.45; margin-bottom: 0.55rem; }
+.tn-head { margin-bottom: 0.3rem; }
+.tn-head strong { font-size: 14px; }
+.rail-sec { padding: 0.9rem 0.7rem 0.6rem; }
+.label { margin-bottom: 0.4rem; padding-left: 0.4rem; }
+.chap { min-height: 38px; }
+.rail-keys { position: sticky; bottom: 0; margin-top: auto; background: linear-gradient(180deg, transparent, var(--surface) 40%); padding: 1rem 1rem 0.8rem; font-size: 12px; }
+
+/* header, banner, footer fine detail */
+.banner { padding: 0.4rem 1.1rem; }
+.vp-head { padding: 1rem 1.4rem 0.95rem; }
+.vp-kicker { margin-bottom: 0.4rem; }
+.vp-text { font-size: 14.5px; max-width: 58ch; text-wrap: pretty; }
+.vp-foot { padding: 0.65rem 1.4rem; }
+.tip { font-size: 13px; }
+.vp-canvas { box-shadow: inset 0 1px 0 var(--line); }
+
+/* consistent thin scrollbars */
+.rail, .side, .page-body, .term, .paper-text { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.18) transparent; }
+.rail::-webkit-scrollbar, .side::-webkit-scrollbar { width: 8px; }
+.rail::-webkit-scrollbar-thumb, .side::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.16); border-radius: 8px; }
+
+/* numbers line up */
+.stage-time, .res-table td, .deltas dd, .gauge-value, .dock-num, .step-label b { font-variant-numeric: tabular-nums; }
+
+/* smoother interaction states */
+.chap, .part, .map-row, .opt, .flow-node, .tool, .ghost-btn, .primary-btn, .btn, .icon-btn { transition: background 0.2s var(--ease), border-color 0.2s var(--ease), color 0.2s var(--ease), transform 0.15s var(--ease), box-shadow 0.2s var(--ease); }
+.primary-btn:hover:not(:disabled) { box-shadow: 0 6px 22px rgba(110, 168, 255, 0.28); }
+.ghost-btn:active, .tool:active, .icon-btn:active { transform: translateY(1px); }
+.part:hover { transform: none; border-color: var(--muted); }
+.map-row:hover { transform: none; }
+
+/* loading veil: visible progress sweep */
+.veil-bar { width: 10rem; height: 3px; border-radius: 2px; }
+.veil-bar i { border-radius: 2px; box-shadow: 0 0 14px rgba(110, 168, 255, 0.7); }
+
+/* reading chapters: headings inside content share one scale */
+.page-body h3 { letter-spacing: -0.01em; }
+.res-table caption, .ba h3, .sub-h, .how h3, .three h3, .credits h3 { font-size: 24px; }
+.res-table caption { padding-bottom: 0.6rem; }
+.three li, .facts li { line-height: 1.5; }
+.credits ul, .credits p { max-width: 62ch; }
+@media (max-width: 899px) { .panel-title { font-size: 24px; } .tour-note { display: none; } }
