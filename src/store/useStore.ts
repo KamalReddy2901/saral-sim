@@ -18,6 +18,7 @@ interface State {
   view: "3d" | "2d";
   canUse3d: boolean;
   reducedMotion: boolean;
+  sceneReady: boolean;
   fullscreen: boolean;
 
   runStatus: RunStatus;
@@ -58,6 +59,7 @@ export const useStore = create<State>((set, get) => ({
   view: "3d",
   canUse3d: true,
   reducedMotion: false,
+  sceneReady: false,
   fullscreen: false,
 
   runStatus: "idle",

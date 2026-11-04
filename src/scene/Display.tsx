@@ -27,28 +27,37 @@ export function Display({ showHotspots, interactive }: { showHotspots: boolean; 
 
   return (
     <group position={[DISPLAY_POS[0], DISPLAY_POS[1], DISPLAY_POS[2]]} rotation={[DISPLAY_TILT, 0, 0]}>
-      {/* bezel and glass */}
-      <RoundedBox args={[SCREEN_W + 1.6, SCREEN_H + 1.6, 1.1]} radius={0.45} smoothness={4}>
-        <meshPhysicalMaterial color="#0b121d" roughness={0.38} metalness={0.2} clearcoat={0.5} />
+      {/* aluminium back shell, black front bezel and a thin lit edge */}
+      <RoundedBox args={[SCREEN_W + 1.9, SCREEN_H + 1.9, 1.3]} radius={0.75} smoothness={5} position={[0, 0, -0.15]}>
+        <meshPhysicalMaterial color="#aeb7c7" metalness={1} roughness={0.32} />
       </RoundedBox>
-      <mesh position={[0, 0, 0.56]}>
+      <RoundedBox args={[SCREEN_W + 1.5, SCREEN_H + 1.5, 0.5]} radius={0.6} smoothness={5} position={[0, 0, 0.45]}>
+        <meshPhysicalMaterial color="#05080d" roughness={0.22} metalness={0.1} clearcoat={1} clearcoatRoughness={0.1} />
+      </RoundedBox>
+      <mesh position={[0, 0, 0.72]}>
         <planeGeometry args={[SCREEN_W, SCREEN_H]} />
-        <meshStandardMaterial color="#ffffff" emissive="#fbfcff" emissiveIntensity={0.9} />
+        <meshStandardMaterial color="#ffffff" emissive="#fbfcff" emissiveIntensity={0.35} />
       </mesh>
-      <Html transform occlude={[occluders.pi, occluders.usb]} position={[0, 0, 0.6]} scale={HTML_SCALE} zIndexRange={[5, 0]} style={{ pointerEvents: interactive ? "auto" : "none" }} className="html-learner">
+      <mesh position={[0, -(SCREEN_H / 2 + 0.55), 0.72]}>
+        <boxGeometry args={[0.35, 0.12, 0.05]} />
+        <meshStandardMaterial color="#14ff8a" emissive="#14ff8a" emissiveIntensity={2} />
+      </mesh>
+      <Html transform occlude={[occluders.pi, occluders.usb]} position={[0, 0, 0.76]} scale={HTML_SCALE} zIndexRange={[5, 0]} style={{ pointerEvents: interactive ? "auto" : "none" }} className="html-learner">
         <div ref={wrap} className="embedded-learner" style={{ width: EMBED_W, height: EMBED_H }}>
           <LearnerApp key={key} passage={passage} settings={settings} onSettingsChange={setLearner} manageFocus={interactive} />
+          <span className="glass-glare" aria-hidden="true" />
         </div>
       </Html>
-      {/* stand */}
-      <mesh position={[0, -0.9, -2.7]} rotation={[0.62, 0, 0]}>
-        <boxGeometry args={[11, 9.6, 0.8]} />
-        <meshPhysicalMaterial color="#1a2638" roughness={0.45} metalness={0.4} />
-      </mesh>
-      <mesh position={[0, -5.9, 0.9]}>
-        <boxGeometry args={[13, 0.5, 6.5]} />
-        <meshPhysicalMaterial color="#1a2638" roughness={0.45} metalness={0.4} />
-      </mesh>
+      {/* stand: angled aluminium kickstand and a weighted base */}
+      <RoundedBox args={[10.5, 9.8, 0.9]} radius={0.35} smoothness={3} position={[0, -0.9, -2.8]} rotation={[0.62, 0, 0]}>
+        <meshPhysicalMaterial color="#8d97a8" metalness={1} roughness={0.34} />
+      </RoundedBox>
+      <RoundedBox args={[13.5, 0.7, 6.8]} radius={0.3} smoothness={3} position={[0, -5.95, 0.9]}>
+        <meshPhysicalMaterial color="#8d97a8" metalness={1} roughness={0.34} />
+      </RoundedBox>
+      {[-5.2, 5.2].map((x) => (
+        <mesh key={x} position={[x, -6.4, 3.2]}><cylinderGeometry args={[0.55, 0.6, 0.25, 20]} /><meshStandardMaterial color="#0b0f17" roughness={0.9} /></mesh>
+      ))}
       {showHotspots && (
         <>
           <Hotspot id="display" position={[SCREEN_W / 2 + 1.2, SCREEN_H / 2 + 1, 1]} visible />

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { copy } from "./data/copy";
 import { Intro } from "./chapters/Intro";
 import { Device } from "./chapters/Device";
@@ -6,9 +6,8 @@ import { Load } from "./chapters/Load";
 import { Offline } from "./chapters/Offline";
 import { AI } from "./chapters/AI";
 import { FullscreenLearner, LearnerChapter } from "./chapters/LearnerChapter";
-import { CHAPTER_COUNT, prefersReducedMotion, useStore } from "./store/useStore";
-import { Banner } from "./ui/Banner";
-import { ChapterBar } from "./ui/ChapterBar";
+import { prefersReducedMotion, useStore } from "./store/useStore";
+import { Dock, TopBar, Wordmark } from "./ui/ChapterBar";
 import { detectCapabilities, modeFromUrl } from "./utils/capabilities";
 import { ARASAAC_CREDIT, ARASAAC_IN_USE } from "./utils/pictograms";
 import { Device2D } from "./scene/Device2D";
@@ -91,14 +90,32 @@ export function App() {
   const light = LIGHT.has(chapter);
   const show3d = view === "3d";
 
+  const sceneReady = useStore((s) => s.sceneReady);
+  const [forceReady, setForceReady] = useState(false);
+  useEffect(() => { const id = window.setTimeout(() => setForceReady(true), 9000); return () => window.clearTimeout(id); }, []);
+  const veilDone = view === "2d" || sceneReady || forceReady;
+
+  // Keep CSS variables in sync with the real header and dock heights.
+  const topRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const root = document.documentElement;
+    const top = document.querySelector(".topbar");
+    const dock = document.querySelector(".dock");
+    const ro = new ResizeObserver(() => {
+      if (top) root.style.setProperty("--top-h", `${top.getBoundingClientRect().height}px`);
+      if (dock) root.style.setProperty("--dock-h", `${dock.getBoundingClientRect().height}px`);
+    });
+    if (top) ro.observe(top);
+    if (dock) ro.observe(dock);
+    return () => ro.disconnect();
+  }, []);
+
   return (
-    <div className="app" data-world="dark" data-chapter={chapter}>
+    <div className="app" ref={topRef} data-world="dark" data-chapter={chapter} data-ready={veilDone ? "1" : "0"}>
       <a className="skip-link" href="#main" onClick={(e) => { e.preventDefault(); setChapter(8); document.getElementById("main")?.focus(); }}>
         {copy.nav.skip}
       </a>
-      <ChapterBar />
       <div className="main">
-        <Banner />
         <div className="stage-area">
           <div className="stage-wrap" data-hidden={light ? "1" : "0"} data-dim={DIM.has(chapter) ? "1" : "0"}>
             {show3d ? (
@@ -115,19 +132,18 @@ export function App() {
               <ChapterView chapter={chapter} />
             </Suspense>
             {!light && chapter !== 0 && !DIM.has(chapter) && <p className="caption">{copy.captions[chapter]}</p>}
-            {light || chapter === 0 ? <p className="sr-only">{copy.captions[chapter]}</p> : null}
-            {DIM.has(chapter) && <p className="sr-only">{copy.captions[chapter]}</p>}
-            {chapter !== 0 && (
-              <div className="stepper">
-                <button className="btn btn-sm" onClick={back}>{copy.nav.back}</button>
-                {chapter < CHAPTER_COUNT - 1 && <button className="btn btn-sm btn-next" onClick={next}>{copy.nav.next}</button>}
-              </div>
-            )}
+            {(light || chapter === 0 || DIM.has(chapter)) && <p className="sr-only">{copy.captions[chapter]}</p>}
           </main>
         </div>
+        <TopBar />
+        <Dock />
         {ARASAAC_IN_USE && <footer className="arasaac-credit">{ARASAAC_CREDIT} Non-commercial use.</footer>}
       </div>
       <FullscreenLearner />
+      <div className="veil" aria-hidden={veilDone} data-done={veilDone ? "1" : "0"}>
+        <Wordmark />
+        <span className="veil-bar"><i /></span>
+      </div>
     </div>
   );
 }

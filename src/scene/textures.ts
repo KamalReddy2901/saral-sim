@@ -30,6 +30,23 @@ export function makeSilkscreen(): CanvasTexture {
   g.closePath(); g.stroke();
   g.beginPath(); g.moveTo(-18, 18); g.quadraticCurveTo(-22, -18, 18, -20); g.quadraticCurveTo(20, 20, -18, 18); g.stroke();
   g.restore();
+  // fine copper detail: traces and vias, deterministic so the board never changes between loads
+  let seed = 7;
+  const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+  g.strokeStyle = "rgba(120,210,150,.28)"; g.lineWidth = 2.4;
+  for (let i = 0; i < 70; i++) {
+    const x = rnd() * 84 - 42, z = rnd() * 54 - 27, len = 3 + rnd() * 9;
+    g.beginPath(); g.moveTo(X(x), Y(z));
+    if (rnd() > 0.5) { g.lineTo(X(x + len), Y(z)); g.lineTo(X(x + len), Y(z + len * 0.4)); } else { g.lineTo(X(x), Y(z + len)); g.lineTo(X(x + len * 0.4), Y(z + len)); }
+    g.stroke();
+  }
+  g.fillStyle = "rgba(232,185,74,.85)";
+  for (let i = 0; i < 160; i++) {
+    g.beginPath(); g.arc(X(rnd() * 82 - 41), Y(rnd() * 52 - 26), 0.42 * mm, 0, Math.PI * 2); g.fill();
+  }
+  // solder pads along the edge connectors
+  for (let k = 0; k < 14; k++) { g.fillRect(X(-27 + k * 1.6), Y(26.4), 0.9 * mm, 1.4 * mm); }
+  g.fillStyle = "rgba(255,255,255,.9)";
   // mounting hole rings
   for (const [hx, hz] of [[-39, -24.5], [-39, 24.5], [19, -24.5], [19, 24.5]] as const) {
     g.beginPath(); g.arc(X(hx), Y(hz), 2.9 * mm, 0, Math.PI * 2); g.stroke();

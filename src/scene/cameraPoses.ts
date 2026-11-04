@@ -9,7 +9,7 @@ export interface CameraPose {
   offsetYMobile: number;
 }
 
-const HERO: CameraPose = { position: [26, 20, 50], target: [-1, 4, 2.5], fov: 36, offsetX: -0.19, offsetYMobile: -0.22 };
+const HERO: CameraPose = { position: [21, 16, 40], target: [-1, 4, 3], fov: 36, offsetX: -0.2, offsetYMobile: -0.22 };
 const SIDE = (position: CameraPose["position"], target: CameraPose["target"], fov = 38): CameraPose => ({
   position, target, fov, offsetX: 0.17, offsetYMobile: 0.24,
 });
@@ -19,7 +19,7 @@ export const CAMERA_POSES: readonly CameraPose[] = [
   { ...HERO, offsetX: 0, offsetYMobile: 0 }, // 1 barrier (stage hidden)
   SIDE([23, 20, 38], [-2, 5, 4], 38), // 2 device, exploded
   SIDE([13, 14, 34], [-1, 3, 5], 38), // 3 load a passage
-  SIDE([30, 7, 22], [-1, 1.8, 6.5], 32), // 4 offline, ports close-up
+  SIDE([17, 8, 26], [-1, 2, 6.5], 32), // 4 offline, ports close-up
   SIDE([17, 20, 38], [-2, 7.5, 2], 38), // 5 local AI
   { ...HERO, offsetX: 0, offsetYMobile: 0 }, // 6 checks (dimmed)
   { ...HERO, offsetX: 0, offsetYMobile: 0 }, // 7 pictograms (dimmed)

@@ -71,7 +71,7 @@ test("own passage preview is labelled", async ({ page }) => {
 for (const ch of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]) {
   test(`axe: chapter ${ch} has no serious or critical violations (2D)`, async ({ page }) => {
     await page.goto(`/?mode=2d&chapter=${ch}`);
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(1500);
     expect(await axe(page)).toEqual([]);
   });
 }

@@ -25,17 +25,17 @@ export function UsbStick({ showHotspots }: { showHotspots: boolean }) {
   });
   return (
     <group ref={ref}>
-      <RoundedBox args={[LENGTH, 2.2, 1.1]} radius={0.28} smoothness={3}>
-        <meshPhysicalMaterial color="#2f5bea" roughness={0.35} clearcoat={0.6} />
+      <RoundedBox args={[LENGTH, 2.2, 1.1]} radius={0.38} smoothness={4}>
+        <meshPhysicalMaterial color="#2f5bea" roughness={0.28} clearcoat={0.8} clearcoatRoughness={0.2} />
       </RoundedBox>
-      <mesh position={[-LENGTH / 2 - 0.55, 0, 0]}>
-        <boxGeometry args={[1.6, 1.8, 0.5]} />
-        <meshStandardMaterial color="#d3dbe8" metalness={0.95} roughness={0.25} />
+      <RoundedBox args={[1.9, 1.9, 0.9]} radius={0.15} smoothness={2} position={[-LENGTH / 2 - 0.8, 0, 0]}>
+        <meshStandardMaterial color="#d7deea" metalness={1} roughness={0.2} />
+      </RoundedBox>
+      <mesh position={[-LENGTH / 2 - 0.8, 0, 0.46]}><boxGeometry args={[1.3, 0.9, 0.06]} /><meshStandardMaterial color="#05080d" roughness={0.8} /></mesh>
+      <mesh position={[LENGTH / 2 - 0.7, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.38, 0.12, 10, 24]} /><meshStandardMaterial color="#d7deea" metalness={1} roughness={0.25} />
       </mesh>
-      <mesh position={[LENGTH / 2 - 0.6, 0, 0.56]}>
-        <cylinderGeometry args={[0.3, 0.3, 0.1, 16]} />
-        <meshStandardMaterial color="#0b121d" />
-      </mesh>
+      <mesh position={[0.4, 0, 0.56]}><boxGeometry args={[0.5, 0.2, 0.05]} /><meshStandardMaterial color="#ffc933" emissive="#ffc933" emissiveIntensity={1.6} /></mesh>
       <Hotspot id="usb" position={[0, 2.2, 0]} visible={showHotspots} />
     </group>
   );
