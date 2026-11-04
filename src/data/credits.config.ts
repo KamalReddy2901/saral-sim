@@ -16,6 +16,7 @@ export const openSource: { name: string; licence: string; use: string }[] = [
   { name: "zustand", licence: "MIT", use: "State" },
   { name: "GSAP", licence: "Standard no-charge licence (gsap.com/standard-license)", use: "Camera tweens" },
   { name: "Vite", licence: "MIT", use: "Build" },
-  { name: "Lexend (@fontsource/lexend)", licence: "SIL Open Font License 1.1", use: "Site UI and headings" },
+  { name: "Inter Tight (@fontsource-variable/inter-tight)", licence: "SIL Open Font License 1.1", use: "Site UI and headings" },
+  { name: "Instrument Serif (@fontsource/instrument-serif)", licence: "SIL Open Font License 1.1", use: "Accent type" },
   { name: "Atkinson Hyperlegible (@fontsource/atkinson-hyperlegible)", licence: "SIL Open Font License 1.1", use: "Learner screen" },
 ];

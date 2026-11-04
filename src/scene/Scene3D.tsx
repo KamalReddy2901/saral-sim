@@ -60,7 +60,7 @@ function useSceneDriver() {
       gsap.killTweensOf(S, "cards,slot");
       if (reduced) { S.cards = 1; S.slot = 1; return; }
       gsap.to(S, { cards: 1, duration: 0.9, ease: "power2.out" });
-      gsap.to(S, { slot: 1, duration: 1.1, delay: 1.7, ease: "power2.in" });
+      gsap.to(S, { slot: 1, duration: 1.1, delay: 3.6, ease: "power2.in" });
     }
   }, [runStatus, runStage, reduced]);
 }
@@ -164,7 +164,7 @@ function SceneContents({ lowPower }: { lowPower: boolean }) {
   const showHotspots = chapter === 2 || mode === "explore";
   return (
     <>
-      <color attach="background" args={["#0e1a2b"]} />
+      <color attach="background" args={["#09090b"]} />
       <Lighting quality={lowPower ? "low" : "high"} reducedMotion={reduced} />
       <ReadySignal shadows={!lowPower} />
       <CameraRig />
@@ -175,7 +175,7 @@ function SceneContents({ lowPower }: { lowPower: boolean }) {
       <TokenStream text={passage.text} />
       <Cards sentences={passage.easyRead} />
       {!lowPower && (
-        <EffectComposer multisampling={4}>
+        <EffectComposer multisampling={2}>
           <Bloom intensity={0.6} luminanceThreshold={0.95} luminanceSmoothing={0.25} mipmapBlur radius={0.7} />
           <Vignette eskil={false} offset={0.25} darkness={0.55} />
           <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
@@ -203,7 +203,7 @@ export default function Scene3D() {
   return (
     <div ref={holder} className="canvas-holder">
       <Canvas
-        dpr={[1, caps.mobile ? 1.5 : 2]}
+        dpr={[1, caps.mobile ? 1.5 : 1.75]}
         camera={{ fov: 38, near: 0.5, far: 220, position: [15, 11, 24] }}
         shadows={!caps.lowPower}
         flat={!caps.lowPower}

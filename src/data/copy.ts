@@ -13,6 +13,7 @@ export const copy = {
   },
   hero: {
     headline: "Saral turns any short passage into an easy-read lesson. Offline, on a Raspberry Pi.",
+    accent: "easy-read lesson.",
     sub: "Made for learners with Down syndrome. A small AI model runs on the device itself, with no internet and no cloud.",
     run: "Run the simulation",
     learner: "Open the learner screen",

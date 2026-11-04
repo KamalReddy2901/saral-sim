@@ -14,8 +14,8 @@ export const EMBED_H = 400;
 export const TOKEN_ORIGIN = [5, 10, 10] as const;
 export const SOC_WORLD = [PI_POS[0] - 10 * PI_SCALE, PI_POS[1] + 5.2 * PI_SCALE, PI_POS[2] + 2 * PI_SCALE] as const;
 export const CARD_TARGETS: readonly (readonly [number, number, number])[] = [
-  [-5.8, 15.6, -5], [0, 15.6, -5], [5.8, 15.6, -5],
-  [-5.8, 13.0, -5], [0, 13.0, -5], [5.8, 13.0, -5],
+  [-7.6, 17.2, -4], [0, 17.2, -4], [7.6, 17.2, -4],
+  [-7.6, 13.6, -4], [0, 13.6, -4], [7.6, 13.6, -4],
 ];
-export const CARD_W = 5.3;
-export const CARD_H = 2.3;
+export const CARD_W = 7.1;
+export const CARD_H = 3.1;

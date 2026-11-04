@@ -26,7 +26,7 @@ export function UsbStick({ showHotspots }: { showHotspots: boolean }) {
   return (
     <group ref={ref}>
       <RoundedBox args={[LENGTH, 2.2, 1.1]} radius={0.38} smoothness={4}>
-        <meshPhysicalMaterial color="#2f5bea" roughness={0.28} clearcoat={0.8} clearcoatRoughness={0.2} />
+        <meshPhysicalMaterial color="#7a66ff" roughness={0.28} clearcoat={0.8} clearcoatRoughness={0.2} />
       </RoundedBox>
       <RoundedBox args={[1.9, 1.9, 0.9]} radius={0.15} smoothness={2} position={[-LENGTH / 2 - 0.8, 0, 0]}>
         <meshStandardMaterial color="#d7deea" metalness={1} roughness={0.2} />

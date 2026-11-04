@@ -1,11 +1,13 @@
 /* Central design tokens. Everything else reads from here. */
 :root {
-  --ink: #0b1424;
-  --ink-2: #0e1a2b;
-  --panel: #14243b;
-  --panel-2: #1c3250;
-  --mist: #e8eef7;
-  --sun: #ffc933;
+  --ink: #09090b;
+  --ink-2: #101014;
+  --panel: #131318;
+  --panel-2: #1d1d25;
+  --mist: #f4f4f6;
+  --sun: #cdbfff; /* lilac: active accent */
+  --peach: #ffc7a6;
+  --amber: #ffd37a;
   --cobalt: #2f5bea;
   --cobalt-strong: #1a36a0; /* white text on this passes 7:1 */
   --leaf: #23a26d;
@@ -17,7 +19,8 @@
   --text-dark: #0e1a2b;
   --text-soft: #3b4a60;
 
-  --font-ui: "Lexend", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-ui: "Inter Tight Variable", "Inter Tight", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Instrument Serif", Georgia, serif;
   --font-learner: "Atkinson Hyperlegible", "Lexend", system-ui, sans-serif;
 
   --step--1: 0.875rem;
@@ -30,8 +33,8 @@
   --radius: 12px;
   --radius-lg: 22px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --glass: linear-gradient(180deg, rgba(24, 40, 66, 0.74), rgba(11, 20, 36, 0.8));
-  --hairline: rgba(255, 255, 255, 0.09);
+  --glass: linear-gradient(180deg, rgba(24, 24, 31, 0.7), rgba(12, 12, 16, 0.78));
+  --hairline: rgba(255, 255, 255, 0.08);
   --top-h: 5rem;
   --dock-h: 5.5rem;
 }
@@ -40,19 +43,19 @@
 [data-world="dark"] {
   --bg: var(--ink);
   --fg: var(--mist);
-  --fg-soft: #a9b9d1;
+  --fg-soft: #a4a4b2;
   --surface: var(--panel);
   --line: var(--hairline);
   --accent: var(--sun);
-  --link: #9db8ff;
+  --link: #cdbfff;
 }
 /* Light world: the learner's world. Cool paper white, ink text, sun highlights. */
 [data-world="light"] {
-  --bg: #f4f6fb;
+  --bg: #f2f2f5;
   --fg: var(--text-dark);
   --fg-soft: var(--text-soft);
   --surface: var(--paper);
-  --line: #dde4f1;
+  --line: #e2e2ea;
   --accent: var(--cobalt-strong);
   --link: var(--cobalt-strong);
 }

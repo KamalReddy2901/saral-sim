@@ -6,9 +6,9 @@ export function Wordmark() {
   return (
     <span className="wordmark">
       <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
-        <rect width="32" height="32" rx="9" fill="#ffc933" />
-        <path d="M9 21c0-6 4-10 14-11-1 9-5 13-11 13-1.2 0-2.200-.5-3-1.500z" fill="#0e1a2b" />
-        <path d="M9 23c3-4 6-7 10-9" stroke="#ffc933" strokeWidth="1.600" strokeLinecap="round" fill="none" />
+        <rect width="32" height="32" rx="10" fill="url(#wm)" /><defs><linearGradient id="wm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#d9d2ff" /><stop offset="1" stopColor="#ffc9a8" /></linearGradient></defs>
+        <path d="M9 21c0-6 4-10 14-11-1 9-5 13-11 13-1.2 0-2.200-.5-3-1.500z" fill="#0a0a0b" />
+        <path d="M9 23c3-4 6-7 10-9" stroke="#e6dcff" strokeWidth="1.600" strokeLinecap="round" fill="none" />
       </svg>
       <span>{copy.brand}</span>
     </span>
@@ -44,6 +44,12 @@ export function TopBar() {
   );
 }
 
+const Chevron = ({ dir }: { dir: "l" | "r" }) => (
+  <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d={dir === "l" ? "M12 4l-6 6 6 6" : "M8 4l6 6-6 6"} />
+  </svg>
+);
+
 export function Dock() {
   const chapter = useStore((s) => s.chapter);
   const setChapter = useStore((s) => s.setChapter);
@@ -51,11 +57,11 @@ export function Dock() {
   const back = useStore((s) => s.back);
   return (
     <nav className="dock" aria-label={copy.nav.chapters}>
-      <button className="dock-btn" onClick={back} disabled={chapter === 0}>{copy.nav.back}</button>
+      <button className="dock-btn" onClick={back} disabled={chapter === 0} aria-label={copy.nav.back}><Chevron dir="l" /></button>
       <div className="dock-center">
         <div className="dock-label">
+          <span className="dock-num" aria-label={`Chapter ${chapter + 1} of ${CHAPTER_COUNT}`}>{String(chapter + 1).padStart(2, "0")}<small>/{CHAPTER_COUNT}</small></span>
           <strong>{copy.chapters[chapter].title}</strong>
-          <span aria-label={`Chapter ${chapter + 1} of ${CHAPTER_COUNT}`}>{chapter + 1} / {CHAPTER_COUNT}</span>
         </div>
         <ol className="dock-ticks">
           {copy.chapters.map((c, i) => (
@@ -70,7 +76,7 @@ export function Dock() {
           {copy.chapters.map((c, i) => (<option key={c.id} value={i}>{`${i + 1}. ${c.title}`}</option>))}
         </select>
       </div>
-      <button className="dock-btn dock-next" onClick={next} disabled={chapter === CHAPTER_COUNT - 1}>{copy.nav.next}</button>
+      <button className="dock-btn dock-next" onClick={next} disabled={chapter === CHAPTER_COUNT - 1} aria-label={copy.nav.next}><Chevron dir="r" /></button>
     </nav>
   );
 }

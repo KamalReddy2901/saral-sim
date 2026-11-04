@@ -22,7 +22,7 @@ const plastic = new MeshStandardMaterial({ color: "#0d1119", roughness: 0.5 });
 const gold = new MeshStandardMaterial({ color: "#f0c25a", metalness: 1, roughness: 0.18 });
 const cavity = new MeshStandardMaterial({ color: "#020305", roughness: 1 });
 const tongueBlack = new MeshStandardMaterial({ color: "#23283a", roughness: 0.5 });
-const tongueBlue = new MeshStandardMaterial({ color: "#2f5bea", roughness: 0.4 });
+const tongueBlue = new MeshStandardMaterial({ color: "#7a66ff", roughness: 0.4 });
 const tongueWhite = new MeshStandardMaterial({ color: "#e9edf5", roughness: 0.45 });
 const ledGreen = new MeshStandardMaterial({ color: "#14ff8a", emissive: "#14ff8a", emissiveIntensity: 2.2 });
 const ledAmber = new MeshStandardMaterial({ color: "#ffb020", emissive: "#ffb020", emissiveIntensity: 2.2 });
@@ -192,9 +192,9 @@ export function PiBoard({ showHotspots }: { showHotspots: boolean }) {
             <meshPhysicalMaterial color="#e3e9f4" roughness={0.18} transmission={0.25} thickness={2} />
           </RoundedBox>
           <RoundedBox args={[10, 13, 14]} radius={1.2} smoothness={3} position={[62, TOP + 6.2, 17]}>
-            <meshStandardMaterial color="#2447c9" roughness={0.55} />
+            <meshStandardMaterial color="#6a56f0" roughness={0.55} />
           </RoundedBox>
-          <mesh geometry={cables.eth}><meshStandardMaterial color="#2f5bea" roughness={0.62} /></mesh>
+          <mesh geometry={cables.eth}><meshStandardMaterial color="#7a66ff" roughness={0.62} /></mesh>
         </group>
 
         {/* front edge: two micro-HDMI, flat-cable connectors */}
