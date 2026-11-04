@@ -22,19 +22,6 @@ export function LearnerChapter() {
   );
 }
 
-/** 2D view of the learner chapter: the same component in a device frame, shown inside the viewport. */
-export function Learner2D() {
-  const p = useActivePassage();
-  const settings = useStore((s) => s.learner);
-  const setLearner = useStore((s) => s.setLearner);
-  const key = useStore((s) => s.learnerKey);
-  return (
-    <div className="learner-2d">
-      <div className="learner-frame"><LearnerApp key={key} passage={p} settings={settings} onSettingsChange={setLearner} /></div>
-    </div>
-  );
-}
-
 /** Same component, full size. Best experience on phones. */
 export function FullscreenLearner() {
   const open = useStore((s) => s.fullscreen);

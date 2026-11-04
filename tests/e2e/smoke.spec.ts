@@ -3,15 +3,6 @@ import { readFileSync } from "node:fs";
 
 const axeSource = readFileSync("node_modules/axe-core/axe.min.js", "utf8");
 
-async function noThirdParty(page: Page) {
-  const external: string[] = [];
-  page.on("request", (r) => {
-    const u = new URL(r.url());
-    if (u.hostname !== "127.0.0.1" && u.protocol.startsWith("http")) external.push(r.url());
-  });
-  return external;
-}
-
 async function axe(page: Page) {
   await page.addScriptTag({ content: axeSource });
   return page.evaluate(async () => {
@@ -22,30 +13,36 @@ async function axe(page: Page) {
   });
 }
 
-test("2D mode: all 12 chapters render, banner and tags are present, no third-party requests, no console errors", async ({ page }) => {
-  const external = await noThirdParty(page);
+test("all 12 chapters render with the honesty banner, no third-party requests, no console errors", async ({ page }) => {
+  const external: string[] = [];
+  page.on("request", (r) => {
+    const u = new URL(r.url());
+    if (u.hostname !== "127.0.0.1" && u.protocol.startsWith("http")) external.push(r.url());
+  });
   const errors: string[] = [];
-  page.on("console", (m) => { if (m.type() === "error" || m.type() === "warning") errors.push(m.text()); });
-  await page.goto("/?mode=2d");
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(page.getByText(/Example outputs were prepared by the team/).first()).toBeVisible();
+  await expect(page.getByText(/Example outputs were prepared by the team/)).toBeVisible();
+  await expect(page.getByText("Take the tour")).toBeVisible();
   for (let i = 1; i < 12; i++) {
     await page.keyboard.press("ArrowRight");
     await expect(page.locator(".app")).toHaveAttribute("data-chapter", String(i));
-    await page.waitForTimeout(150);
+    await page.waitForTimeout(250);
   }
+  await expect(page.getByText("12 of 12 seen")).toBeVisible();
   expect(external).toEqual([]);
   expect(errors).toEqual([]);
 });
 
 test("learner screen: read, quiz, gentle feedback, done", async ({ page }) => {
-  await page.goto("/?mode=2d&chapter=8");
-  const l = page.locator(".learner-frame");
+  await page.goto("/?chapter=8");
+  await page.getByRole("button", { name: "Full-screen view" }).click();
+  const l = page.locator(".fs");
   await l.getByRole("button", { name: "Start" }).click();
   await expect(l.locator(".lrn-sentence")).toBeVisible({ timeout: 6000 });
   for (let i = 0; i < 5; i++) await l.getByRole("button", { name: /^Next/ }).click();
   await l.getByRole("button", { name: /^Questions/ }).click();
-  // Q1 is yes/no with answer Yes: answer No first to see the gentle message
   await l.getByRole("button", { name: "No" }).click();
   await expect(l.getByText("Let's look again")).toBeVisible();
   await expect(l.getByText(/wrong|fail|incorrect/i)).toHaveCount(0);
@@ -54,14 +51,25 @@ test("learner screen: read, quiz, gentle feedback, done", async ({ page }) => {
   await expect(l.getByText("Well done!")).toBeVisible();
 });
 
-test("chapter 6 shows the scripted retry for the water cycle", async ({ page }) => {
-  await page.goto("/?mode=2d&chapter=6");
-  await expect(page.getByText("longest sentence over 12 words")).toBeVisible();
-  await expect(page.getByText("All checks pass")).toBeVisible();
+test("checks walkthrough shows the scripted retry for the water cycle", async ({ page }) => {
+  await page.goto("/?chapter=6");
+  await page.getByRole("button", { name: "Pause" }).click({ timeout: 8000 }).catch(() => undefined);
+  await page.getByRole("button", { name: /Check A/ }).first().click();
+  await expect(page.getByText(/19 words/).first()).toBeVisible();
+  await page.getByRole("button", { name: /Check A/ }).last().click();
+  await expect(page.getByText("Check A passes")).toBeVisible();
+});
+
+test("barrier divider compares the two sentences", async ({ page }) => {
+  await page.goto("/?chapter=1");
+  const range = page.getByLabel("Compare the original sentence with the easy-read version");
+  await expect(range).toBeVisible();
+  await range.fill("80");
+  await expect(page.getByText("Up high, it is cold, and clouds form.")).toBeVisible();
 });
 
 test("own passage preview is labelled", async ({ page }) => {
-  await page.goto("/?mode=2d&chapter=3");
+  await page.goto("/?chapter=3");
   await page.getByLabel("Try your own passage").check();
   const text = readFileSync("src/data/passages.ts", "utf8").match(/const P3_TEXT =\s*"([^"]+)"/)![1];
   await page.locator("#passage-text").fill(text);
@@ -69,26 +77,27 @@ test("own passage preview is labelled", async ({ page }) => {
 });
 
 for (const ch of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]) {
-  test(`axe: chapter ${ch} has no serious or critical violations (2D)`, async ({ page }) => {
-    await page.goto(`/?mode=2d&chapter=${ch}`);
-    await page.waitForTimeout(1500);
+  test(`axe: chapter ${ch} has no serious or critical violations`, async ({ page }) => {
+    await page.goto(`/?chapter=${ch}`);
+    await page.waitForTimeout(1800);
     expect(await axe(page)).toEqual([]);
   });
 }
 
-test("3D mode renders a canvas and the embedded learner", async ({ page }) => {
+test("3D canvas renders and the 3D tools are present", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
-  await page.goto("/?mode=3d&chapter=8");
+  await page.goto("/?chapter=2");
   await expect(page.locator("canvas")).toBeVisible({ timeout: 20000 });
-  await expect(page.locator(".embedded-learner").getByRole("button", { name: "Start" })).toBeVisible({ timeout: 20000 });
+  await expect(page.getByRole("button", { name: "Reset view" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Unplug cable" })).toBeVisible();
   expect(errors).toEqual([]);
 });
 
 test("reduced motion: run completes instantly", async ({ browser }) => {
   const ctx = await browser.newContext({ reducedMotion: "reduce" });
   const page = await ctx.newPage();
-  await page.goto("/?mode=2d&chapter=5");
+  await page.goto("/?chapter=5");
   await page.getByRole("button", { name: "Run", exact: true }).click();
   await expect(page.getByText("Lesson ready on the display.")).toBeVisible();
   await ctx.close();

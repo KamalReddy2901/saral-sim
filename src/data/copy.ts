@@ -191,6 +191,20 @@ export const copy = {
       "Saral follows Easy-to-Read principles. It is not certified Easy-to-Read and has not been reviewed by people with Down syndrome.",
     proportions: "The 3D model is a simplified illustration. Proportions are approximate.",
   },
+  tips: [
+    "New here? Press Start the tour, or use the chapter list on the left. Every chapter takes under a minute.",
+    "Read the two sentences, then drag the divider to compare them.",
+    "Hover a numbered marker to see the part name. Click a part in the list to highlight it. Drag the 3D view to look around.",
+    "Pick a sample passage, or tick Try your own passage to see a basic-mode preview.",
+    "Click the Ethernet plug in the 3D view to plug it back in. Nothing changes, because nothing needs the network.",
+    "Press Run and watch the chip. You can also click the chip in the 3D view.",
+    "Press Play to watch the checks work, or click any step to jump to it.",
+    "Each word is looked up in a small local library. No match, no picture.",
+    "Use it the way a learner would: touch, mouse or keyboard. Open it full screen on a phone.",
+    "Numbers marked Simulated are placeholders until they are measured on the Raspberry Pi.",
+    "One real sentence from the water cycle passage, before and after.",
+    "Replace the placeholders in the credits config before sharing the link.",
+  ],
   fallback2d: "3D is not available here, so you are seeing the 2D guided view. Everything still works.",
 } as const;
 

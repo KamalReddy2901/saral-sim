@@ -25,11 +25,6 @@ export function Header() {
   const setChapter = useStore((s) => s.setChapter);
   const next = useStore((s) => s.next);
   const back = useStore((s) => s.back);
-  const mode = useStore((s) => s.mode);
-  const setMode = useStore((s) => s.setMode);
-  const view = useStore((s) => s.view);
-  const setView = useStore((s) => s.setView);
-  const canUse3d = useStore((s) => s.canUse3d);
   return (
     <>
       <header className="head">
@@ -45,11 +40,7 @@ export function Header() {
           <button className="icon-btn" onClick={next} disabled={chapter === CHAPTER_COUNT - 1} aria-label={copy.nav.next}><Chev dir="r" /></button>
         </div>
         <div className="head-tools">
-          <div className="seg" role="group" aria-label="Mode">
-            <button aria-pressed={mode === "guided"} onClick={() => setMode("guided")}>{copy.nav.guided}</button>
-            <button aria-pressed={mode === "explore"} onClick={() => setMode("explore")} disabled={view === "2d"}>{copy.nav.explore}</button>
-          </div>
-          {canUse3d && <button className="ghost-btn" onClick={() => setView(view === "3d" ? "2d" : "3d")}>{view === "3d" ? copy.nav.view2d : copy.nav.view3d}</button>}
+          <button className="ghost-btn" onClick={() => setChapter(8)}>{copy.nav.skip}</button>
         </div>
       </header>
       <Banner />
@@ -60,14 +51,22 @@ export function Header() {
 export function Rail() {
   const chapter = useStore((s) => s.chapter);
   const setChapter = useStore((s) => s.setChapter);
+  const visited = useStore((s) => s.visited);
+  const seen = visited.length;
   return (
     <nav className="rail" aria-label={copy.nav.chapters}>
+      <div className="tour-note" role="note">
+        <div className="tn-head"><img src={iconSrc("light")} alt="" width="22" height="22" /><strong>Take the tour</strong></div>
+        <p>Go through the chapters one by one, from 01 to 12. Each shows one part of how Saral works. You can jump to any chapter at any time.</p>
+        <div className="tn-bar" role="progressbar" aria-label="Chapters seen" aria-valuemin={0} aria-valuemax={CHAPTER_COUNT} aria-valuenow={seen}><i style={{ width: `${(seen / CHAPTER_COUNT) * 100}%` }} /></div>
+        <span className="mono tn-count">{seen} of {CHAPTER_COUNT} seen</span>
+      </div>
       <section className="rail-sec">
         <h2 className="label">Chapters</h2>
         <ol className="chaps">
           {copy.chapters.map((c, i) => (
             <li key={c.id}>
-              <button className="chap" aria-current={i === chapter ? "step" : undefined} data-done={i < chapter ? "1" : "0"} onClick={() => setChapter(i)}>
+              <button className="chap" aria-current={i === chapter ? "step" : undefined} data-done={visited.includes(i) && i !== chapter ? "1" : "0"} onClick={() => setChapter(i)}>
                 <img src={iconSrc(CHAPTER_ICONS[i])} alt="" width="22" height="22" draggable={false} />
                 <span>{c.title}</span>
                 <i className="chap-dot" aria-hidden="true" />
@@ -76,6 +75,7 @@ export function Rail() {
           ))}
         </ol>
       </section>
+      <p className="rail-keys mono">← → chapters · F fullscreen</p>
     </nav>
   );
 }

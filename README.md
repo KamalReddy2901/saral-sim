@@ -15,7 +15,7 @@ npm run build      # type-check + production build into dist/
 npm run preview
 ```
 
-Useful URL parameters: `?mode=2d` or `?mode=3d` forces a view; `?chapter=5` opens a chapter (0 to 11).
+Useful URL parameters: ``?chapter=5` opens a chapter (0 to 11).
 
 ## Deploy
 
@@ -30,13 +30,13 @@ Static output in `dist/`, no backend, no environment variables.
 Edit only `src/data/metrics.config.ts`: set `source: "measured"`, fill `measuredOn` (hardware, OS, ExecuTorch version, date), replace the values, rebuild. Every badge switches from *Simulated* to *Measured on Raspberry Pi*, and the dashboard, model card, impact numbers and timers update. A `null` value shows "To be measured". Team names and links: `src/data/credits.config.ts`.
 
 ## Design language
-A quiet instrument workspace: three hairline-divided columns (chapters, a framed 3D viewport, chapter details), cool graphite surfaces, one soft-azure accent, teal for live data. Titles in Instrument Serif, interface in Geist, readouts in Geist Mono, the product's own pictograms as chapter icons. The learner screen is the only bright surface, so it reads as the user's world glowing out of the instrument. Reading chapters (barrier, checks, pictograms, results, impact, credits) take the centre; the 3D viewport steps aside.
+A quiet instrument workspace: a chapter list on the left (with a "take the tour" note and progress), a framed 3D viewport in the middle, chapter details on the right. The viewport is a header / canvas / footer stack, so nothing ever covers the model: the header explains the chapter and gives one tip, the footer holds the 3D tools (reset view, pull apart, fan, cable) and Back / Continue. Cool graphite surfaces, one soft-azure accent, teal for data, Instrument Serif titles, Geist interface, the product's pictograms as chapter icons. The learner screen is the only bright surface.
 
-The 3D viewport is the main stage: dark studio, glossy floor, accent lights that change colour per chapter, a scan sheet through the device on each chapter change, restrained bloom and grain. Interactions: hover lifts a part and shows its name; click opens it; click the Ethernet plug to pull it out or plug it in; click the USB stick to eject or insert it; click the screen to open the learner chapter; click the chip or cooler to start a run (chapter 5) or spin the fan; the picture leans toward the pointer; the briefing card can be hidden; `F` fullscreens the viewport; `R` runs the simulation. Explore mode adds free orbit, a pull-apart slider, fly-to-part on click and a reset button.
+There is one 3D mode: drag to orbit freely, scroll to zoom, hover a part to lift it and see its name, click it to open it. Click the Ethernet plug to pull it out, the USB stick to eject it, the screen to open the learner chapter, the chip or cooler to start a run (chapter 6) or spin the fan. Each chapter glides the camera to its own framing; Reset view returns to it. Reading chapters (barrier, checks, pictograms, results, impact, credits) take the centre and the 3D viewport steps aside; chapter changes cross-fade with the View Transitions API where available. `F` fullscreens the viewport; arrow keys move between chapters.
 
 ## What is in it
 
-Twelve chapters (0 to 11): intro, the barrier, the device (exploded 3D with keyboard-focusable hotspots), load a passage (plus a basic-mode preview for your own text), offline proof, the local AI run (signature moment), checks (scripted retry), pictograms, the learner screen (rendered on the 3D display and full-screen), results, impact, credits. Guided and Explore modes. A 2D guided view takes over when WebGL is missing, the device is low-power, or the visitor chooses it.
+Twelve chapters (0 to 11): intro, the barrier, the device (exploded 3D with keyboard-focusable hotspots), load a passage (plus a basic-mode preview for your own text), offline proof, the local AI run (signature moment), checks (scripted retry), pictograms, the learner screen (rendered on the 3D display and full-screen), results, impact, credits. If WebGL is missing, the viewport explains that and every chapter still works from the list.
 
 Structure: `src/data` (passages, metrics, copy), `src/learner` (self-contained learner app), `src/preview` (basic mode and checks), `src/scene` (3D), `src/chapters`, `src/ui`, `src/store`, `src/utils`.
 

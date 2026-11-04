@@ -5,11 +5,10 @@ import { useHotspot } from "./hotspotStore";
 import { S } from "./sceneState";
 
 /** Everything a click on a 3D part does. Kept in one place so each part stays declarative. */
-export function partClick(id: string, point: { x: number; y: number; z: number }) {
+export function partClick(id: string, _point: { x: number; y: number; z: number }) {
   const h = useHotspot.getState();
   const st = useStore.getState();
   h.setActive(id);
-  if (st.mode === "explore") h.setFocus([point.x, point.y, point.z]);
 
   switch (id) {
     case "eth":

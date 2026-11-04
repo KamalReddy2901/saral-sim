@@ -28,7 +28,7 @@ export function Hotspot({ id, position, visible }: { id: string; position: reado
         <button
           className="hotspot"
           style={{ pointerEvents: "auto" }}
-          aria-label={`${part.name}. ${part.text}`}
+          aria-label={`${idx}. ${part.name}. ${part.text}`}
           aria-pressed={active === id}
           onClick={() => setActive(active === id ? null : id)}
           onFocus={() => setActive(id)}

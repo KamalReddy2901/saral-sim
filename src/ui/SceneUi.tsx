@@ -7,8 +7,8 @@ import { useStore } from "../store/useStore";
 
 const EX_KEYS = ["board", "soc", "cooler", "sd", "power"] as const;
 
-/** Explore-mode controls: scrub the explosion, spin the fan, toggle the cable, reset the view. */
-export function ExploreHud() {
+/** Compact 3D tools in the viewport footer: reset view, pull apart, fan, cable. */
+export function Toolbar() {
   const explode = useHotspot((s) => s.explode);
   const setExplode = useHotspot((s) => s.setExplode);
   const resetView = useHotspot((s) => s.resetView);
@@ -29,36 +29,31 @@ export function ExploreHud() {
   };
 
   return (
-    <aside className="hud" aria-label="Explore controls">
-      <h2>Take it apart</h2>
-      <label>
-        Pull apart
-        <input type="range" min={0} max={1} step={0.01} value={explode} style={{ ["--fill" as string]: `${explode * 100}%` }} onChange={(e) => scrub(Number(e.target.value))} />
+    <div className="toolbar" role="group" aria-label="3D tools">
+      <button className="tool" onClick={resetView}>Reset view</button>
+      <label className="tool tool-range">
+        <span>Pull apart</span>
+        <input aria-label="Pull apart" type="range" min={0} max={1} step={0.01} value={explode} style={{ ["--fill" as string]: `${explode * 100}%` }} onChange={(e) => scrub(Number(e.target.value))} />
       </label>
-      <div className="hud-row">
-        <button className="chip-btn" aria-pressed={fan} onClick={toggleFan}>Spin the fan</button>
-        <button className="chip-btn" aria-pressed={cableOut} onClick={() => setCableOut(!cableOut)}>{cableOut ? "Plug cable in" : "Unplug cable"}</button>
-        <button className="chip-btn" onClick={resetView}>Reset view</button>
-      </div>
-      <p className="hud-hint">{copy.device.exploreHint} Click a part to fly to it.</p>
-    </aside>
+      <button className="tool" aria-pressed={fan} onClick={toggleFan}>Fan</button>
+      <button className="tool" aria-pressed={cableOut} onClick={() => setCableOut(!cableOut)}>{cableOut ? "Plug in cable" : "Unplug cable"}</button>
+    </div>
   );
 }
 
-/** Card for the last clicked part, in chapters that have no parts list. */
+/** Card for the last clicked part, floating over the canvas corner. */
 export function PartCard() {
   const active = useHotspot((s) => s.active);
   const setActive = useHotspot((s) => s.setActive);
   const chapter = useStore((s) => s.chapter);
-  const mode = useStore((s) => s.mode);
   const part = copy.device.parts.find((p) => p.id === active);
   useEffect(() => { if (chapter === 2) return; const id = window.setTimeout(() => setActive(null), 6000); return () => window.clearTimeout(id); }, [active, chapter, setActive]);
-  if (!part || chapter === 2 || mode === "explore") return null;
+  if (!part || chapter === 2) return null;
   return (
     <div className="part-card" role="status">
       <strong>{part.name}</strong>
       <span>{part.text}</span>
-      <button className="chip-btn" onClick={() => setActive(null)} aria-label="Close part card">Close</button>
+      <button className="ghost-btn" onClick={() => setActive(null)} aria-label="Close part card">Close</button>
     </div>
   );
 }

@@ -9,6 +9,7 @@ import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { useActivePassage } from "../store/selectors";
 import { useStore } from "../store/useStore";
 import { detectCapabilities } from "../utils/capabilities";
+import { SPAN_CHAPTERS } from "../data/chapterMeta";
 import { BACKDROPS, GLOWS } from "./backdrops";
 import { Cards } from "./Cards";
 import { CAMERA_POSES } from "./cameraPoses";
@@ -28,7 +29,6 @@ const bgColor = new Color();
 /** Maps store state (chapter, mode, run) to the mutable scene animation state. */
 function useSceneDriver() {
   const chapter = useStore((s) => s.chapter);
-  const mode = useStore((s) => s.mode);
   const cableOut = useStore((s) => s.cableOut);
   const runStatus = useStore((s) => s.runStatus);
   const runStage = useStore((s) => s.runStage);
@@ -43,12 +43,12 @@ function useSceneDriver() {
   }, [chapter, reduced]);
 
   useEffect(() => {
-    const exploded = chapter === 2 || mode === "explore";
-    if (mode === "explore") useHotspot.getState().setExplode(1);
+    const exploded = chapter === 2;
+    useHotspot.getState().setExplode(exploded ? 1 : 0);
     EX_KEYS.forEach((k, i) => {
       tween(S.ex, { [k]: exploded ? 1 : 0 }, reduced, { duration: 1.5, delay: (exploded ? i : EX_KEYS.length - 1 - i) * 0.12 });
     });
-  }, [chapter, mode, reduced]);
+  }, [chapter, reduced]);
 
   useEffect(() => { tween(S, { usb: chapter >= 3 ? 1 : 0 }, reduced, { duration: 1.6 }); }, [chapter, reduced]);
   useEffect(() => { tween(S, { away: chapter === 8 ? 1 : 0 }, reduced, { duration: 1.4, ease: "power3.inOut" }); }, [chapter, reduced]);
@@ -122,40 +122,31 @@ function homeFor(chapter: number, width: number, height: number): Home {
 }
 
 /**
- * One OrbitControls for everything. Guided mode: drag to look around within a tight range around the chapter's
- * pose, and the view eases back when you let go. Explore mode: free orbit. Chapter changes glide the camera.
+ * One OrbitControls. Drag to orbit freely around the product, scroll to zoom. Each chapter glides the camera to its
+ * own framing; "Reset view" returns to the current chapter's framing. Limits keep the product in view.
  */
 function CameraControls() {
   const { camera, size } = useThree();
   const chapter = useStore((s) => s.chapter);
-  const mode = useStore((s) => s.mode);
   const reduced = useStore((s) => s.reducedMotion);
-  const focus = useHotspot((s) => s.focus);
   const viewReset = useHotspot((s) => s.viewReset);
   const ref = useRef<OrbitControlsImpl | null>(null);
   const home = useRef<Home>(homeFor(chapter, size.width, size.height));
   const first = useRef(true);
-  const timer = useRef<number>(0);
   const cam = camera as PerspectiveCamera;
   if (import.meta.env.DEV) (window as unknown as { __cam: unknown }).__cam = camera;
 
   const applyLimits = (c: OrbitControlsImpl, h: Home) => {
-    if (mode === "explore") {
-      c.minAzimuthAngle = -Infinity; c.maxAzimuthAngle = Infinity;
-      c.minPolarAngle = 0.2; c.maxPolarAngle = Math.PI / 2 - 0.03;
-      c.minDistance = 8; c.maxDistance = 70;
-      return;
-    }
     const off = h.pos.clone().sub(h.tgt);
     const d = off.length();
     const az = Math.atan2(off.x, off.z);
     const pol = Math.acos(Math.min(1, Math.max(-1, off.y / d)));
-    c.minAzimuthAngle = az - 0.75; c.maxAzimuthAngle = az + 0.75;
-    c.minPolarAngle = Math.max(0.2, pol - 0.4); c.maxPolarAngle = Math.min(Math.PI / 2 - 0.03, pol + 0.4);
-    c.minDistance = d * 0.55; c.maxDistance = d * 1.45;
+    c.minAzimuthAngle = az - 1.5; c.maxAzimuthAngle = az + 1.5;
+    c.minPolarAngle = Math.max(0.2, pol - 0.7); c.maxPolarAngle = Math.min(Math.PI / 2 - 0.03, pol + 0.7);
+    c.minDistance = d * 0.45; c.maxDistance = d * 1.7;
   };
 
-  const glideTo = (h: Home, instant: boolean, duration = 1.4) => {
+  const glideTo = (h: Home, instant: boolean, duration = 1.5) => {
     const c = ref.current;
     if (!c) return;
     gsap.killTweensOf(camera.position); gsap.killTweensOf(c.target); gsap.killTweensOf(cam);
@@ -170,44 +161,24 @@ function CameraControls() {
     gsap.to(cam, { fov: h.fov, duration, ease, onUpdate: () => cam.updateProjectionMatrix() });
   };
 
-  // chapter, mode or size changed: fly to the chapter pose
   useEffect(() => {
     const c = ref.current;
-    if (!c) return;
+    if (!c || size.width < 10) return;
     const h = homeFor(chapter, size.width, size.height);
     home.current = h;
     const instant = reduced || first.current;
     first.current = false;
     glideTo(h, instant);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chapter, mode, reduced, size.width, size.height]);
+  }, [chapter, reduced, size.width, size.height]);
 
-  // guided mode: after the visitor lets go, ease back to the pose
   useEffect(() => {
     const c = ref.current;
     if (!c) return;
-    const onStart = () => { window.clearTimeout(timer.current); gsap.killTweensOf(camera.position); gsap.killTweensOf(c.target); };
-    const onEnd = () => {
-      if (mode === "explore" || reduced) return;
-      window.clearTimeout(timer.current);
-      timer.current = window.setTimeout(() => glideTo(home.current, false, 1.1), 1800);
-    };
-    c.addEventListener("start", onStart);
-    c.addEventListener("end", onEnd);
-    return () => { c.removeEventListener("start", onStart); c.removeEventListener("end", onEnd); window.clearTimeout(timer.current); };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode, reduced]);
-
-  // explore: click a part to fly to it
-  useEffect(() => {
-    const c = ref.current;
-    if (!c || !focus || mode !== "explore") return;
-    const dir = camera.position.clone().sub(c.target).normalize();
-    const dist = Math.max(11, Math.min(camera.position.distanceTo(c.target), 26));
-    gsap.to(c.target, { x: focus[0], y: focus[1], z: focus[2], duration: 0.9, ease: "power3.inOut" });
-    gsap.to(camera.position, { x: focus[0] + dir.x * dist, y: focus[1] + dir.y * dist, z: focus[2] + dir.z * dist, duration: 0.9, ease: "power3.inOut" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [focus]);
+    const stop = () => { gsap.killTweensOf(camera.position); gsap.killTweensOf(c.target); };
+    c.addEventListener("start", stop);
+    return () => c.removeEventListener("start", stop);
+  }, [camera]);
 
   useEffect(() => {
     if (viewReset === 0) return;
@@ -218,7 +189,7 @@ function CameraControls() {
   return (
     <OrbitControls
       ref={ref as never} makeDefault enableDamping dampingFactor={0.09} enablePan={false}
-      rotateSpeed={0.65} zoomSpeed={0.7} screenSpacePanning={false}
+      rotateSpeed={0.7} zoomSpeed={0.7} screenSpacePanning={false}
     />
   );
 }
@@ -243,10 +214,9 @@ function ReadySignal({ shadows }: { shadows: boolean }) {
 function SceneContents({ lowPower }: { lowPower: boolean }) {
   useSceneDriver();
   const chapter = useStore((s) => s.chapter);
-  const mode = useStore((s) => s.mode);
   const passage = useActivePassage();
   const reduced = useStore((s) => s.reducedMotion);
-  const showHotspots = chapter === 2 || mode === "explore";
+  const showHotspots = chapter === 2;
   return (
     <>
       <Lighting quality={lowPower ? "low" : "high"} reducedMotion={reduced} />
@@ -284,7 +254,7 @@ export default function Scene3D() {
     return () => io.disconnect();
   }, []);
 
-  const hiddenChapter = chapter === 1 || chapter >= 9;
+  const hiddenChapter = SPAN_CHAPTERS.has(chapter);
   return (
     <div ref={holder} className="canvas-holder">
       <Canvas
