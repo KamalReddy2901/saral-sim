@@ -51,7 +51,6 @@ function ExploreHudSlot() {
 export function App() {
   const chapter = useStore((s) => s.chapter);
   const view = useStore((s) => s.view);
-  const mode = useStore((s) => s.mode);
   const next = useStore((s) => s.next);
   const back = useStore((s) => s.back);
   const setChapter = useStore((s) => s.setChapter);
@@ -120,9 +119,7 @@ export function App() {
           {chapter === 8 && !show3d ? <Learner2D /> : show3d ? <Suspense fallback={null}><Scene3D /></Suspense> : <Device2D />}
         </div>
         <div className="vp-chrome" aria-hidden="true"><i /><i /><i /><i /></div>
-        <div className="vp-tag mono">fig.{String(chapter + 1).padStart(2, "0")} / {copy.chapters[chapter].rail.toLowerCase()}</div>
         <button className="vp-full ghost-btn" onClick={() => setMax((m) => !m)} aria-pressed={max}>{max ? "Exit fullscreen" : "Fullscreen"} <kbd>F</kbd></button>
-        <div className="vp-read mono" aria-hidden="true">{show3d ? `3d · ${mode}` : "2d · guided"}</div>
         <Briefing />
         {show3d && <ExploreHudSlot />}
         {show3d && <PartCard />}

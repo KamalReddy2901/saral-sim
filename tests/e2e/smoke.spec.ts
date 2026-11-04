@@ -28,7 +28,7 @@ test("2D mode: all 12 chapters render, banner and tags are present, no third-par
   page.on("console", (m) => { if (m.type() === "error" || m.type() === "warning") errors.push(m.text()); });
   await page.goto("/?mode=2d");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(page.getByText("Simulation of the Saral prototype").first()).toBeVisible();
+  await expect(page.getByText(/Example outputs were prepared by the team/).first()).toBeVisible();
   for (let i = 1; i < 12; i++) {
     await page.keyboard.press("ArrowRight");
     await expect(page.locator(".app")).toHaveAttribute("data-chapter", String(i));

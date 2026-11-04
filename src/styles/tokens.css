@@ -14,9 +14,10 @@
   --text: #e9ecf3;
   --muted: #98a1b3;
   --dim: #8791a6;
-  --accent: #ffc933;
-  --accent-ink: #1b1400;
-  --accent-soft: rgba(255, 201, 51, 0.12);
+  --accent: #6ea8ff;
+  --accent-ink: #04122b;
+  --accent-soft: rgba(110, 168, 255, 0.14);
+  --amber: #f0c25e;
   --teal: #5ad6c6;
   --good: #52d69f;
   --bad: #ff8070;
@@ -34,7 +35,7 @@
   --r: 10px;
   --r-lg: 14px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --rail-w: 256px;
-  --side-w: 360px;
+  --rail-w: 232px;
+  --side-w: 344px;
   --head-h: 52px;
 }

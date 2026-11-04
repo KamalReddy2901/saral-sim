@@ -18,13 +18,13 @@ export function Device2D() {
   const running = runStatus === "running";
   const usbIn = chapter >= 3;
   const pick = (id: string) => ({ onClick: () => setActive(active === id ? null : id), style: { cursor: "pointer" } as const });
-  const hl = (id: string) => (active === id ? "#ffc933" : undefined);
+  const hl = (id: string) => (active === id ? "#6ea8ff" : undefined);
   const lift = (n: number) => (exploded ? n : 0);
 
   return (
     <div className="dev2d" role="img" aria-label={copy.captions[chapter]}>
       <svg viewBox="0 0 800 520" strokeLinejoin="round" strokeLinecap="round">
-        <ellipse cx="400" cy="486" rx="340" ry="20" fill="#ffc933" opacity="0.12" />
+        <ellipse cx="400" cy="486" rx="340" ry="20" fill="#6ea8ff" opacity="0.12" />
         {/* display and stand */}
         <g {...pick("stand")}>
           <path d="M330 472 L470 472 L446 400 L354 400Z" fill={hl("stand") ?? "#c9d3e8"} stroke="#9fb0d8" strokeWidth="6" />
@@ -33,7 +33,7 @@ export function Device2D() {
           <rect x="190" y="56" width="420" height="304" rx="26" fill={INK} stroke="#9fb0d8" strokeWidth="6" />
           <rect x="214" y="80" width="372" height="256" rx="10" fill={hl("display") ?? "#fff"} />
           <rect x="250" y="126" width="300" height="24" rx="8" fill="#2f5bea" />
-          <rect x="250" y="170" width="240" height="24" rx="8" fill="#ffc933" stroke="#9fb0d8" strokeWidth="3" />
+          <rect x="250" y="170" width="240" height="24" rx="8" fill="#6ea8ff" stroke="#9fb0d8" strokeWidth="3" />
           <rect x="250" y="214" width="270" height="24" rx="8" fill={INK} />
           <rect x="320" y="268" width="160" height="44" rx="12" fill="#1a36a0" stroke="#9fb0d8" strokeWidth="4" />
         </g>
@@ -53,7 +53,7 @@ export function Device2D() {
               <g className={running ? "fan-spin" : ""} style={{ transformOrigin: "125px 97px" }}>
                 <path d="M125 97 L125 74 M125 97 L148 97 M125 97 L125 120 M125 97 L102 97" stroke="#fff" strokeWidth="6" />
               </g>
-              <circle cx="125" cy="97" r="56" fill="#ffc933" opacity={running ? 0.35 : 0} />
+              <circle cx="125" cy="97" r="56" fill="#6ea8ff" opacity={running ? 0.35 : 0} />
             </g>
           </g>
           <rect x={22 - lift(18)} y={38 + lift(20)} width="40" height="30" rx="5" fill={hl("sd") ?? INK} stroke="#9fb0d8" strokeWidth="4" />

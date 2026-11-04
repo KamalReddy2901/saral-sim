@@ -1,6 +1,4 @@
 import { copy } from "../data/copy";
-import { PASSAGES, passageWordCount } from "../data/passages";
-import { startSimulation } from "../store/runSimulation";
 import { CHAPTER_COUNT, useStore } from "../store/useStore";
 import { iconSrc } from "../utils/pictograms";
 import { Banner } from "./Banner";
@@ -52,7 +50,6 @@ export function Header() {
             <button aria-pressed={mode === "explore"} onClick={() => setMode("explore")} disabled={view === "2d"}>{copy.nav.explore}</button>
           </div>
           {canUse3d && <button className="ghost-btn" onClick={() => setView(view === "3d" ? "2d" : "3d")}>{view === "3d" ? copy.nav.view2d : copy.nav.view3d}</button>}
-          <button className="ghost-btn tool-skip" onClick={() => setChapter(8)}>{copy.nav.skip}</button>
         </div>
       </header>
       <Banner />
@@ -63,22 +60,10 @@ export function Header() {
 export function Rail() {
   const chapter = useStore((s) => s.chapter);
   const setChapter = useStore((s) => s.setChapter);
-  const passageId = useStore((s) => s.passageId);
-  const custom = useStore((s) => s.custom);
-  const setPassage = useStore((s) => s.setPassage);
-  const learner = useStore((s) => s.learner);
-  const setLearner = useStore((s) => s.setLearner);
-
-  const run = () => {
-    const st = useStore.getState();
-    st.setChapter(5);
-    startSimulation({ retry: st.passageId === "p1" && !st.custom, reduced: st.reducedMotion });
-  };
-
   return (
-    <aside className="rail" aria-label="Chapters and settings">
+    <nav className="rail" aria-label={copy.nav.chapters}>
       <section className="rail-sec">
-        <h2 className="label"><b>01</b> Chapters</h2>
+        <h2 className="label">Chapters</h2>
         <ol className="chaps">
           {copy.chapters.map((c, i) => (
             <li key={c.id}>
@@ -91,42 +76,6 @@ export function Rail() {
           ))}
         </ol>
       </section>
-
-      <section className="rail-sec">
-        <h2 className="label"><b>02</b> Passage</h2>
-        <div className="opts" role="radiogroup" aria-label="Sample passage">
-          {PASSAGES.map((p) => (
-            <button key={p.id} role="radio" aria-checked={!custom && passageId === p.id} className="opt" onClick={() => setPassage(p.id)}>
-              <strong>{p.title}</strong>
-              <span>{p.subject} · {passageWordCount(p)} words</span>
-            </button>
-          ))}
-        </div>
-      </section>
-
-      <section className="rail-sec">
-        <h2 className="label"><b>03</b> Learner screen</h2>
-        <div className="field">
-          <span className="field-name" id="lbl-size">Text size</span>
-          <div className="seg seg-fill" role="group" aria-labelledby="lbl-size">
-            {(["Small", "Medium", "Large"] as const).map((s, i) => (
-              <button key={s} aria-pressed={learner.textSize === i} onClick={() => setLearner({ textSize: i as 0 | 1 | 2 })}>{s}</button>
-            ))}
-          </div>
-        </div>
-        <div className="field">
-          <span className="field-name" id="lbl-theme">Colours</span>
-          <div className="seg seg-fill" role="group" aria-labelledby="lbl-theme">
-            <button aria-pressed={learner.theme === "normal"} onClick={() => setLearner({ theme: "normal" })}>Normal</button>
-            <button aria-pressed={learner.theme === "high"} onClick={() => setLearner({ theme: "high" })}>High contrast</button>
-          </div>
-        </div>
-      </section>
-
-      <div className="rail-foot">
-        <button className="primary-btn" onClick={run}><span>Run the simulation</span><kbd>R</kbd></button>
-        <p className="note">The checks catch many mistakes, not all. Example outputs only.</p>
-      </div>
-    </aside>
+    </nav>
   );
 }

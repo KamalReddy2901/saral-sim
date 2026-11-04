@@ -38,7 +38,7 @@ export function Lighting({ quality, reducedMotion }: { quality: "high" | "low"; 
     <>
       <Environment resolution={512} background={false} environmentIntensity={0.75}>
         <Lightformer form="rect" intensity={2.6} color="#dfe6ff" position={[0, 18, 4]} rotation-x={Math.PI / 2} scale={[40, 14, 1]} />
-        <Lightformer form="rect" intensity={7} color="#ffc933" position={[-22, 6, 6]} rotation-y={Math.PI / 2} scale={[26, 3, 1]} />
+        <Lightformer form="rect" intensity={7} color="#7aa9ff" position={[-22, 6, 6]} rotation-y={Math.PI / 2} scale={[26, 3, 1]} />
         <Lightformer form="rect" intensity={7} color="#4de1d2" position={[22, 6, -4]} rotation-y={-Math.PI / 2} scale={[26, 3, 1]} />
         <Lightformer form="rect" intensity={4} color="#3b6bff" position={[0, 7, -26]} scale={[36, 4, 1]} />
         <Lightformer form="rect" intensity={2.2} color="#ffffff" position={[12, 9, 22]} rotation-y={0.4} scale={[14, 5, 1]} />
@@ -49,7 +49,7 @@ export function Lighting({ quality, reducedMotion }: { quality: "high" | "low"; 
         shadow-mapSize={[1024, 1024]} shadow-camera-left={-34} shadow-camera-right={34} shadow-camera-top={34} shadow-camera-bottom={-34}
         shadow-camera-near={1} shadow-camera-far={100} shadow-bias={-0.0003} shadow-normalBias={0.03} shadow-radius={6}
       />
-      <pointLight ref={accent} position={[-14, 5, 12]} intensity={26} distance={34} decay={2} color="#ffc933" />
+      <pointLight ref={accent} position={[-14, 5, 12]} intensity={26} distance={34} decay={2} color="#6ea8ff" />
       <pointLight position={[16, 6, -6]} intensity={14} distance={30} decay={2} color="#4de1d2" />
       <pointLight ref={socLight} position={[SOC_WORLD[0], SOC_WORLD[1] + 1.8, SOC_WORLD[2]]} intensity={0} distance={16} decay={2} color="#ffb347" />
 

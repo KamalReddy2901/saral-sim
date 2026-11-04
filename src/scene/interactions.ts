@@ -50,8 +50,9 @@ export function partHandlers(id: string) {
       if (useHotspot.getState().hover === id) useHotspot.getState().setHover(null);
       document.body.style.cursor = "";
     },
-    onClick: (e: { stopPropagation: () => void; point: { x: number; y: number; z: number } }) => {
+    onClick: (e: { stopPropagation: () => void; delta?: number; point: { x: number; y: number; z: number } }) => {
       e.stopPropagation();
+      if ((e.delta ?? 0) > 5) return; // it was a drag, not a click
       partClick(id, e.point);
     },
   };

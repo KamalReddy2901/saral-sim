@@ -10,7 +10,7 @@ const A = new Vector3(...TOKEN_ORIGIN);
 const B = new Vector3(SOC_WORLD[0], SOC_WORLD[1] + 0.9, SOC_WORLD[2]);
 const o = new Object3D();
 const tmp = new Vector3();
-const sun = new Color("#ffc933");
+const sun = new Color("#8cbaff");
 const mist = new Color("#e8eef7");
 
 /** The passage's words detach as small tokens (width follows each word's length) and arc into the chip. */
@@ -56,7 +56,7 @@ export function TokenStream({ text }: { text: string }) {
   return (
     <instancedMesh ref={ref} args={[undefined, undefined, MAX_TOKENS]} frustumCulled={false}>
       <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial emissive="#ffc933" emissiveIntensity={0.55} roughness={0.4} />
+      <meshStandardMaterial emissive="#8cbaff" emissiveIntensity={0.55} roughness={0.4} />
     </instancedMesh>
   );
 }

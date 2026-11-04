@@ -64,7 +64,7 @@ export function Display({ showHotspots, interactive }: { showHotspots: boolean; 
       <RoundedBox args={[13.5, 0.7, 6.8]} radius={0.3} smoothness={3} position={[0, -5.95, 0.9]}>
         <meshPhysicalMaterial color="#8d97a8" metalness={1} roughness={0.34} />
       </RoundedBox>
-      <mesh position={[0, -5.5, 4.3]}><boxGeometry args={[12, 0.14, 0.14]} /><meshStandardMaterial color="#ffc933" emissive="#ffc933" emissiveIntensity={3} /></mesh>
+      <mesh position={[0, -5.5, 4.3]}><boxGeometry args={[12, 0.14, 0.14]} /><meshStandardMaterial color="#6ea8ff" emissive="#6ea8ff" emissiveIntensity={3} /></mesh>
       {[-5.2, 5.2].map((x) => (
         <mesh key={x} position={[x, -6.4, 3.2]}><cylinderGeometry args={[0.55, 0.6, 0.25, 20]} /><meshStandardMaterial color="#0b0f17" roughness={0.9} /></mesh>
       ))}

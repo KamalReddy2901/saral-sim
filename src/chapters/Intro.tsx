@@ -1,4 +1,3 @@
-import { copy } from "../data/copy";
 import { Panel } from "../ui/Panel";
 
 /** Side panel for chapter 0: how this simulation works. The headline itself lives in the viewport briefing. */
@@ -11,8 +10,7 @@ export function Intro() {
         <li><strong>Easy-read with pictograms.</strong> Short sentences, one idea each, a picture where there is a match.</li>
         <li><strong>Checks in plain code.</strong> The AI proposes, code verifies what the learner sees.</li>
       </ul>
-      <p className="muted">{copy.banner}</p>
-      <p className="muted">Use the chapters on the left, or the arrow keys. Press <kbd>F</kbd> to fullscreen the 3D viewport.</p>
+      <p className="muted">Follow the tour with the arrow keys or the chapter list. Press <kbd>F</kbd> for a fullscreen viewport.</p>
     </Panel>
   );
 }

@@ -13,5 +13,5 @@ export const BACKDROPS = [
 ] as const;
 
 export const GLOWS = [
-  "#ffc933", "#ffc933", "#4de1d2", "#ff7a66", "#3b6bff", "#ffc933", "#3fdc95", "#3fdc95", "#ffc933", "#ffc933", "#ffc933", "#ffc933",
+  "#6ea8ff", "#6ea8ff", "#4de1d2", "#6ea8ff", "#4f7bff", "#6ea8ff", "#3fdc95", "#3fdc95", "#6ea8ff", "#6ea8ff", "#6ea8ff", "#6ea8ff",
 ] as const;

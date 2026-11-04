@@ -15,7 +15,7 @@ export const copy = {
     headline: "Saral turns any short passage into an easy-read lesson. Offline, on a Raspberry Pi.",
     accent: "easy-read lesson.",
     sub: "Made for learners with Down syndrome. A small AI model runs on the device itself, with no internet and no cloud.",
-    run: "Run the simulation",
+    run: "Start the tour",
     learner: "Open the learner screen",
   },
   nav: { next: "Next", back: "Back", skip: "Skip to the learner screen", guided: "Guided", explore: "Explore", view2d: "2D view", view3d: "3D view", chapters: "Chapters" },

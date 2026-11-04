@@ -13,6 +13,7 @@ export function Hotspot({ id, position, visible }: { id: string; position: reado
   const active = useHotspot((s) => s.active);
   const setActive = useHotspot((s) => s.setActive);
   const setHover = useHotspot((s) => s.setHover);
+  const hover = useHotspot((s) => s.hover);
   const part = copy.device.parts.find((p) => p.id === id);
   if (!part || !visible) return null;
   const idx = copy.device.parts.indexOf(part) + 1;
@@ -21,7 +22,7 @@ export function Hotspot({ id, position, visible }: { id: string; position: reado
   const ang = (Math.atan2(oy, ox) * 180) / Math.PI;
   return (
     <Html position={[position[0], position[1], position[2]]} center zIndexRange={[30, 10]} style={{ pointerEvents: "none" }}>
-      <div className="hs" style={{ pointerEvents: "none" }}>
+      <div className="hs" data-on={active === id || hover === id ? "1" : "0"} style={{ pointerEvents: "none" }}>
         <span className="hs-line" style={{ width: len - 22, transform: `rotate(${ang}deg) translateX(18px)` }} />
         <span className="hs-chip" style={{ left: 17 + ox, top: 17 + oy }}>{part.name}</span>
         <button

@@ -97,99 +97,128 @@ function HoverDriver() {
 const fwd = new Vector3();
 const rightV = new Vector3();
 const upV = new Vector3();
+const UP = new Vector3(0, 1, 0);
 
-function CameraRig() {
-  const { camera, size, pointer } = useThree();
+interface Home { pos: Vector3; tgt: Vector3; fov: number }
+
+/** Camera pose for a chapter, shifted so the product sits clear of the briefing card, and backed off on portrait screens. */
+function homeFor(chapter: number, width: number, height: number): Home {
+  const pose = CAMERA_POSES[chapter];
+  const aspect = width / Math.max(1, height);
+  const mobile = width < 600;
+  const tgt = new Vector3(...pose.target);
+  const pos = new Vector3(...pose.position);
+  const k = Math.max(1, 1.25 / aspect);
+  if (k > 1) pos.sub(tgt).multiplyScalar(k).add(tgt);
+  fwd.subVectors(tgt, pos);
+  const h = 2 * fwd.length() * Math.tan((pose.fov * Math.PI) / 360);
+  fwd.normalize();
+  rightV.crossVectors(fwd, UP).normalize();
+  upV.crossVectors(rightV, fwd).normalize();
+  const ox = mobile ? 0 : pose.offsetX;
+  const oy = mobile ? pose.offsetYMobile : pose.offsetY ?? 0;
+  const shift = new Vector3().addScaledVector(rightV, ox * h * aspect).addScaledVector(upV, -oy * h);
+  return { pos: pos.add(shift), tgt: tgt.add(shift), fov: pose.fov };
+}
+
+/**
+ * One OrbitControls for everything. Guided mode: drag to look around within a tight range around the chapter's
+ * pose, and the view eases back when you let go. Explore mode: free orbit. Chapter changes glide the camera.
+ */
+function CameraControls() {
+  const { camera, size } = useThree();
   const chapter = useStore((s) => s.chapter);
   const mode = useStore((s) => s.mode);
   const reduced = useStore((s) => s.reducedMotion);
-  const rig = useRef({ pos: new Vector3(...CAMERA_POSES[0].position), tgt: new Vector3(...CAMERA_POSES[0].target), fov: CAMERA_POSES[0].fov, ox: 0, oy: 0 });
-  const first = useRef(true);
-  const lastFov = useRef(0);
-  const par = useRef({ x: 0, y: 0 });
-
-  useEffect(() => {
-    if (mode !== "guided") return;
-    const pose = CAMERA_POSES[chapter];
-    const mobile = size.width < 600;
-    const ox = mobile ? 0 : pose.offsetX;
-    const oy = mobile ? pose.offsetYMobile : pose.offsetY ?? 0;
-    const r = rig.current;
-    if (first.current) { r.ox = ox; r.oy = oy; }
-    const instant = reduced || first.current;
-    first.current = false;
-    if (!instant) r.pos.copy(camera.position);
-    const o = { duration: 1.5, ease: "power3.inOut" };
-    const ap = (t: object, p: Record<string, number>) => tween(t, p, instant, o);
-    ap(r.pos, { x: pose.position[0], y: pose.position[1], z: pose.position[2] });
-    ap(r.tgt, { x: pose.target[0], y: pose.target[1], z: pose.target[2] });
-    ap(r, { fov: pose.fov, ox, oy });
-  }, [chapter, mode, reduced, size.width, camera]);
-
-  useFrame((state) => {
-    if (mode !== "guided") return;
-    const r = rig.current;
-    const k = Math.max(1, 1.25 / (camera as PerspectiveCamera).aspect);
-    camera.position.copy(r.pos);
-    if (k > 1) camera.position.sub(r.tgt).multiplyScalar(k).add(r.tgt);
-    camera.lookAt(r.tgt);
-    const cam = camera as unknown as { fov: number; aspect: number; updateProjectionMatrix: () => void };
-    if (lastFov.current !== r.fov) { cam.fov = r.fov; cam.updateProjectionMatrix(); lastFov.current = r.fov; }
-    camera.updateMatrixWorld();
-    rightV.setFromMatrixColumn(camera.matrixWorld, 0);
-    upV.setFromMatrixColumn(camera.matrixWorld, 1);
-    fwd.subVectors(r.tgt, camera.position);
-    const h = 2 * fwd.length() * Math.tan((r.fov * Math.PI) / 360);
-    // sideways slide keeps the product clear of the chapter panel
-    if (r.ox !== 0 || r.oy !== 0) camera.position.addScaledVector(rightV, r.ox * h * cam.aspect).addScaledVector(upV, -r.oy * h);
-    // the picture leans a little toward the pointer, so the model feels physical
-    if (!reduced) {
-      par.current.x += (pointer.x - par.current.x) * 0.05;
-      par.current.y += (pointer.y - par.current.y) * 0.05;
-      camera.position.addScaledVector(rightV, par.current.x * h * 0.05).addScaledVector(upV, par.current.y * h * 0.035);
-      if (chapter === 0) {
-        camera.position.x += Math.sin(state.clock.elapsedTime * 0.25) * 1.0;
-        camera.position.y += Math.sin(state.clock.elapsedTime * 0.18) * 0.4;
-      }
-      camera.lookAt(r.tgt);
-    }
-  });
-
-  useEffect(() => {
-    if (mode === "explore") (camera as unknown as { clearViewOffset: () => void }).clearViewOffset();
-  }, [mode, camera]);
-  return null;
-}
-
-function Controls() {
-  const mode = useStore((s) => s.mode);
   const focus = useHotspot((s) => s.focus);
   const viewReset = useHotspot((s) => s.viewReset);
-  const { camera } = useThree();
   const ref = useRef<OrbitControlsImpl | null>(null);
+  const home = useRef<Home>(homeFor(chapter, size.width, size.height));
+  const first = useRef(true);
+  const timer = useRef<number>(0);
+  const cam = camera as PerspectiveCamera;
+  if (import.meta.env.DEV) (window as unknown as { __cam: unknown }).__cam = camera;
 
+  const applyLimits = (c: OrbitControlsImpl, h: Home) => {
+    if (mode === "explore") {
+      c.minAzimuthAngle = -Infinity; c.maxAzimuthAngle = Infinity;
+      c.minPolarAngle = 0.2; c.maxPolarAngle = Math.PI / 2 - 0.03;
+      c.minDistance = 8; c.maxDistance = 70;
+      return;
+    }
+    const off = h.pos.clone().sub(h.tgt);
+    const d = off.length();
+    const az = Math.atan2(off.x, off.z);
+    const pol = Math.acos(Math.min(1, Math.max(-1, off.y / d)));
+    c.minAzimuthAngle = az - 0.75; c.maxAzimuthAngle = az + 0.75;
+    c.minPolarAngle = Math.max(0.2, pol - 0.4); c.maxPolarAngle = Math.min(Math.PI / 2 - 0.03, pol + 0.4);
+    c.minDistance = d * 0.55; c.maxDistance = d * 1.45;
+  };
+
+  const glideTo = (h: Home, instant: boolean, duration = 1.4) => {
+    const c = ref.current;
+    if (!c) return;
+    gsap.killTweensOf(camera.position); gsap.killTweensOf(c.target); gsap.killTweensOf(cam);
+    applyLimits(c, h);
+    if (instant) {
+      camera.position.copy(h.pos); c.target.copy(h.tgt); cam.fov = h.fov; cam.updateProjectionMatrix(); c.update();
+      return;
+    }
+    const ease = "power3.inOut";
+    gsap.to(camera.position, { x: h.pos.x, y: h.pos.y, z: h.pos.z, duration, ease });
+    gsap.to(c.target, { x: h.tgt.x, y: h.tgt.y, z: h.tgt.z, duration, ease });
+    gsap.to(cam, { fov: h.fov, duration, ease, onUpdate: () => cam.updateProjectionMatrix() });
+  };
+
+  // chapter, mode or size changed: fly to the chapter pose
   useEffect(() => {
     const c = ref.current;
-    if (!c || !focus) return;
-    gsap.to(c.target, { x: focus[0], y: focus[1], z: focus[2], duration: 0.9, ease: "power3.inOut" });
+    if (!c) return;
+    const h = homeFor(chapter, size.width, size.height);
+    home.current = h;
+    const instant = reduced || first.current;
+    first.current = false;
+    glideTo(h, instant);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chapter, mode, reduced, size.width, size.height]);
+
+  // guided mode: after the visitor lets go, ease back to the pose
+  useEffect(() => {
+    const c = ref.current;
+    if (!c) return;
+    const onStart = () => { window.clearTimeout(timer.current); gsap.killTweensOf(camera.position); gsap.killTweensOf(c.target); };
+    const onEnd = () => {
+      if (mode === "explore" || reduced) return;
+      window.clearTimeout(timer.current);
+      timer.current = window.setTimeout(() => glideTo(home.current, false, 1.1), 1800);
+    };
+    c.addEventListener("start", onStart);
+    c.addEventListener("end", onEnd);
+    return () => { c.removeEventListener("start", onStart); c.removeEventListener("end", onEnd); window.clearTimeout(timer.current); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode, reduced]);
+
+  // explore: click a part to fly to it
+  useEffect(() => {
+    const c = ref.current;
+    if (!c || !focus || mode !== "explore") return;
     const dir = camera.position.clone().sub(c.target).normalize();
     const dist = Math.max(11, Math.min(camera.position.distanceTo(c.target), 26));
+    gsap.to(c.target, { x: focus[0], y: focus[1], z: focus[2], duration: 0.9, ease: "power3.inOut" });
     gsap.to(camera.position, { x: focus[0] + dir.x * dist, y: focus[1] + dir.y * dist, z: focus[2] + dir.z * dist, duration: 0.9, ease: "power3.inOut" });
-  }, [focus, camera]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focus]);
 
   useEffect(() => {
-    const c = ref.current;
-    if (!c || viewReset === 0) return;
-    const p = CAMERA_POSES[2];
-    gsap.to(c.target, { x: -2, y: 5, z: 4, duration: 1, ease: "power3.inOut" });
-    gsap.to(camera.position, { x: p.position[0], y: p.position[1], z: p.position[2], duration: 1, ease: "power3.inOut" });
-  }, [viewReset, camera]);
+    if (viewReset === 0) return;
+    glideTo(home.current, reduced, 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewReset]);
 
-  if (mode !== "explore") return null;
   return (
     <OrbitControls
-      ref={ref as never} makeDefault enableDamping dampingFactor={0.08} enablePan={false}
-      minPolarAngle={0.25} maxPolarAngle={Math.PI / 2 - 0.04} minDistance={8} maxDistance={60} target={[-2, 5, 4]}
+      ref={ref as never} makeDefault enableDamping dampingFactor={0.09} enablePan={false}
+      rotateSpeed={0.65} zoomSpeed={0.7} screenSpacePanning={false}
     />
   );
 }
@@ -223,8 +252,7 @@ function SceneContents({ lowPower }: { lowPower: boolean }) {
       <Lighting quality={lowPower ? "low" : "high"} reducedMotion={reduced} />
       <ReadySignal shadows={!lowPower} />
       <HoverDriver />
-      <CameraRig />
-      <Controls />
+      <CameraControls />
       <PiBoard showHotspots={showHotspots} />
       <Display showHotspots={showHotspots} interactive={chapter === 8} />
       <UsbStick showHotspots={showHotspots} />
