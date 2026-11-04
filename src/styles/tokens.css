@@ -1,0 +1,54 @@
+/* Central design tokens. Everything else reads from here. */
+:root {
+  --ink: #0e1a2b;
+  --panel: #162a44;
+  --panel-2: #1d3657;
+  --mist: #e8eef7;
+  --sun: #ffc933;
+  --cobalt: #2f5bea;
+  --cobalt-strong: #1a36a0; /* white text on this passes 7:1 */
+  --leaf: #23a26d;
+  --leaf-strong: #095c39; /* white text on this passes 7:1 */
+  --coral: #f0644f;
+  --coral-strong: #9a2f1f;
+  --paper: #ffffff;
+  --paper-warm: #fff8e6;
+  --text-dark: #0e1a2b;
+  --text-soft: #3b4a60;
+
+  --font-ui: "Lexend", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-learner: "Atkinson Hyperlegible", "Lexend", system-ui, sans-serif;
+
+  --step--1: 0.875rem;
+  --step-0: 1rem;
+  --step-1: 1.15rem;
+  --step-2: 1.4rem;
+  --step-3: 1.85rem;
+  --step-4: clamp(1.9rem, 1.3rem + 2.2vw, 3rem);
+
+  --radius: 10px;
+  --focus: 0 0 0 3px var(--paper), 0 0 0 6px var(--cobalt);
+  --rail-w: 15.5rem;
+  --bar-h: 4.5rem;
+}
+
+/* Dark world: the hardware studio */
+[data-world="dark"] {
+  --bg: var(--ink);
+  --fg: var(--mist);
+  --fg-soft: #b6c4da;
+  --surface: var(--panel);
+  --line: #2c4468;
+  --accent: var(--sun);
+  --link: #9db8ff;
+}
+/* Light world: the learner's world */
+[data-world="light"] {
+  --bg: var(--paper-warm);
+  --fg: var(--text-dark);
+  --fg-soft: var(--text-soft);
+  --surface: var(--paper);
+  --line: #d9cfae;
+  --accent: var(--cobalt-strong);
+  --link: var(--cobalt-strong);
+}
