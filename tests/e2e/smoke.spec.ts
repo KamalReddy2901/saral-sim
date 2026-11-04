@@ -60,6 +60,13 @@ test("checks walkthrough shows the scripted retry for the water cycle", async ({
   await expect(page.getByText("Check A passes")).toBeVisible();
 });
 
+test("checks: Next on the last step moves to the next chapter", async ({ page }) => {
+  await page.goto("/?chapter=6");
+  await page.getByRole("button", { name: /Template/ }).click();
+  await page.getByRole("button", { name: "Next chapter" }).click();
+  await expect(page.locator(".app")).toHaveAttribute("data-chapter", "7");
+});
+
 test("barrier divider compares the two sentences", async ({ page }) => {
   await page.goto("/?chapter=1");
   const range = page.getByLabel("Compare the original sentence with the easy-read version");

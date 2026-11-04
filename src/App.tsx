@@ -10,6 +10,7 @@ import { FullscreenLearner, LearnerChapter } from "./chapters/LearnerChapter";
 import { prefersReducedMotion, useStore } from "./store/useStore";
 import { Header, Rail, Wordmark } from "./ui/ChapterBar";
 import { HoverTip } from "./ui/SceneUi";
+import { PageFrame } from "./ui/ChapterFrame";
 import { Viewport } from "./ui/Viewport";
 import { detectCapabilities } from "./utils/capabilities";
 import { ARASAAC_CREDIT, ARASAAC_IN_USE, iconSrc } from "./utils/pictograms";
@@ -111,7 +112,7 @@ export function App() {
       <main id="main" ref={side} tabIndex={-1} className="side" aria-label={copy.chapters[chapter].title}>
         {chapter !== 0 && span && <h1 className="sr-only">{copy.chapters[chapter].title}</h1>}
         <div className="side-fade" key={chapter}>
-          <Suspense fallback={null}><ChapterView chapter={chapter} /></Suspense>
+          <Suspense fallback={null}>{span ? <PageFrame><ChapterView chapter={chapter} /></PageFrame> : <ChapterView chapter={chapter} />}</Suspense>
         </div>
         {ARASAAC_IN_USE && <footer className="arasaac-credit">{ARASAAC_CREDIT} Non-commercial use.</footer>}
       </main>

@@ -17,7 +17,7 @@ export function Impact() {
   return (
     <section className="panel panel-full" tabIndex={0} data-world="light" aria-labelledby="impact-title">
       <div className="panel-inner impact">
-        <h2 id="impact-title" className="panel-title">{copy.impact.title}</h2>
+        <h2 id="impact-title" className="sr-only">{copy.impact.title}</h2>
         <p className="impact-lead">
           Saral rewrote <strong>{s.origSentenceCount}</strong> sentences of <strong>{s.origAvg.toFixed(1)}</strong> words on average into <strong>{s.easyCount}</strong> sentences of <strong>{s.easyAvg.toFixed(1)}</strong> words on average, and added pictograms for <strong>{s.pictures}</strong> of them. It also made <strong>{s.questions}</strong> questions the learner can answer from the text on screen.{" "}
           <Badge kind="example" />

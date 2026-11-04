@@ -52,6 +52,7 @@ interface Step { key: string; short: string; tone: "ok" | "fail" | "info"; title
 export function Checks() {
   const p = useActivePassage();
   const reduced = useStore((s) => s.reducedMotion);
+  const nextChapter = useStore((s) => s.next);
   const scripted = p.id === "p1" && p.subject !== "Custom";
   const own = useMemo(() => (scripted ? null : checkA(p.easyRead.map((s) => s.text), p.text)), [scripted, p]);
 
@@ -105,8 +106,8 @@ export function Checks() {
   return (
     <section className="panel panel-full checks" tabIndex={0} aria-labelledby="checks-title">
       <div className="panel-inner">
-        <h2 id="checks-title" className="panel-title">AI proposes. Code verifies.</h2>
-        <p className="checks-sub">Plain code decides what the learner sees. If checks fail twice, a safe template is used. <Badge kind="exampleRun" /></p>
+        <h2 id="checks-title" className="sr-only">AI proposes. Code verifies.</h2>
+        <p className="checks-sub"><Badge kind="exampleRun" /> Sentences and results are computed in your browser from the example text.</p>
 
         <ol className="flow" aria-label="Checking steps">
           {steps.map((s, n) => (
@@ -128,7 +129,7 @@ export function Checks() {
             <div className="step-ctl">
               <button className="ghost-btn" onClick={() => { setPlaying(false); setI((n) => Math.max(0, n - 1)); }} disabled={i === 0}>Previous</button>
               <button className="primary-btn" onClick={() => { if (i >= steps.length - 1) { setI(0); setPlaying(true); } else setPlaying((x) => !x); }}>{playing ? "Pause" : i >= steps.length - 1 ? "Replay" : "Play"}</button>
-              <button className="ghost-btn" onClick={() => { setPlaying(false); setI((n) => Math.min(steps.length - 1, n + 1)); }} disabled={i >= steps.length - 1}>Next</button>
+              <button className="ghost-btn" onClick={() => { setPlaying(false); if (i >= steps.length - 1) nextChapter(); else setI((n) => n + 1); }}>{i >= steps.length - 1 ? "Next chapter" : "Next"}</button>
             </div>
           </div>
           <div className="step-body">{step.body}</div>

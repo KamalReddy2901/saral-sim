@@ -32,7 +32,7 @@ export function Pictograms() {
   const covered = p.easyRead.filter((s) => s.pictogram).length;
   const cov = metrics.quality.pictogramCoveragePct;
   return (
-    <Panel title={copy.pictograms.title} variant="wide" lead={<><Badge kind="example" /> <span className="muted">{copy.pictograms.rule}</span></>}>
+    <Panel title={copy.pictograms.title} variant="wide" lead={<><Badge kind="example" /> <span className="muted">Lookup trail for each key word in this passage.</span></>}>
       <div className="map-grid">
         {p.easyRead.map((s) => <Trail key={s.id} keyWord={s.key} sentence={s.text} />)}
         {p.id !== "p2" && <Trail keyWord={NO_MATCH.key} sentence={NO_MATCH.text} label={`${NO_MATCH.text} (another example)`} />}

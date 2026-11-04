@@ -35,8 +35,8 @@ export function Results() {
   return (
     <section className="panel panel-full" tabIndex={0} data-world="light" aria-labelledby="results-title">
       <div className="panel-inner results">
-        <h2 id="results-title" className="panel-title">{copy.results.title}</h2>
-        <p className="muted">{copy.results.sub} {metrics.source === "measured" && metrics.measuredOn ? <>Measured on {metrics.measuredOn.hardware}, {metrics.measuredOn.date}.</> : <>These are placeholder values, clearly labelled.</>}</p>
+        <h2 id="results-title" className="sr-only">{copy.results.title}</h2>
+        <p className="muted">{metrics.source === "measured" && metrics.measuredOn ? <>Measured on {metrics.measuredOn.hardware}, {metrics.measuredOn.date}.</> : <>These are placeholder values, clearly labelled.</>}</p>
         <div className="res-grid">
           <table className="res-table">
             <caption>Performance</caption>

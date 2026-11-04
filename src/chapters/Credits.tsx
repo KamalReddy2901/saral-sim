@@ -9,7 +9,7 @@ export function Credits() {
   return (
     <section className="panel panel-full" tabIndex={0} data-world="light" aria-labelledby="credits-title">
       <div className="panel-inner credits">
-        <h2 id="credits-title" className="panel-title">{c.title}</h2>
+        <h2 id="credits-title" className="sr-only">{c.title}</h2>
         <p className="muted">{credits.hackathon}</p>
         <div className="cred-grid">
           <div>

@@ -25,7 +25,7 @@ export function Barrier() {
   return (
     <section className="panel panel-full barrier" tabIndex={0} aria-labelledby="barrier-title">
       <div className="panel-inner">
-        <h2 id="barrier-title" className="panel-title">One idea, two ways to read it</h2>
+        <h2 id="barrier-title" className="sr-only">One idea, two ways to read it</h2>
 
         <div className="ba-stage">
           <div className="wipe" style={{ ["--pos" as string]: `${pos}%` }}>
