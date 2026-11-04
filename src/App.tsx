@@ -1,17 +1,19 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { copy } from "./data/copy";
 import { Intro } from "./chapters/Intro";
 import { Device } from "./chapters/Device";
 import { Load } from "./chapters/Load";
 import { Offline } from "./chapters/Offline";
 import { AI } from "./chapters/AI";
-import { FullscreenLearner, LearnerChapter } from "./chapters/LearnerChapter";
+import { FullscreenLearner, Learner2D, LearnerChapter } from "./chapters/LearnerChapter";
+import { Device2D } from "./scene/Device2D";
+import { startSimulation } from "./store/runSimulation";
 import { prefersReducedMotion, useStore } from "./store/useStore";
-import { Dock, TopBar, Wordmark } from "./ui/ChapterBar";
+import { Briefing } from "./ui/Briefing";
+import { Header, Rail, Wordmark } from "./ui/ChapterBar";
 import { ExploreHud, HoverTip, PartCard } from "./ui/SceneUi";
 import { detectCapabilities, modeFromUrl } from "./utils/capabilities";
 import { ARASAAC_CREDIT, ARASAAC_IN_USE, iconSrc } from "./utils/pictograms";
-import { Device2D } from "./scene/Device2D";
 
 const Scene3D = lazy(() => import("./scene/Scene3D"));
 const Barrier = lazy(() => import("./chapters/Barrier").then((m) => ({ default: m.Barrier })));
@@ -21,10 +23,8 @@ const Results = lazy(() => import("./chapters/Results").then((m) => ({ default: 
 const Impact = lazy(() => import("./chapters/Impact").then((m) => ({ default: m.Impact })));
 const Credits = lazy(() => import("./chapters/Credits").then((m) => ({ default: m.Credits })));
 
-/** Light-world chapters hide the stage entirely. */
-const LIGHT = new Set([1, 9, 10, 11]);
-/** Chapters whose wide panel dims the 3D scene behind it. */
-const DIM = new Set([6, 7]);
+/** Chapters that are reading material: the 3D viewport steps aside and the content takes the centre. */
+const SPAN = new Set([1, 6, 7, 9, 10, 11]);
 
 function ChapterView({ chapter }: { chapter: number }) {
   switch (chapter) {
@@ -55,8 +55,11 @@ export function App() {
   const next = useStore((s) => s.next);
   const back = useStore((s) => s.back);
   const setChapter = useStore((s) => s.setChapter);
+  const reduced = useStore((s) => s.reducedMotion);
+  const sceneReady = useStore((s) => s.sceneReady);
+  const [forceReady, setForceReady] = useState(false);
+  const [max, setMax] = useState(false);
 
-  // Capability detection, once.
   useEffect(() => {
     const caps = detectCapabilities();
     const forced = modeFromUrl();
@@ -70,8 +73,9 @@ export function App() {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
-  // Chapter side effects shared by the 3D and 2D views: the Ethernet cable is pulled out in chapter 4.
-  const reduced = useStore((s) => s.reducedMotion);
+  useEffect(() => { const id = window.setTimeout(() => setForceReady(true), 9000); return () => window.clearTimeout(id); }, []);
+
+  // The Ethernet cable is pulled out in chapter 4 (shared by the 3D and 2D views).
   useEffect(() => {
     const st = useStore.getState();
     if (chapter < 4) { st.setCableOut(false); st.setCloudTried(false); return; }
@@ -82,78 +86,60 @@ export function App() {
     }
   }, [chapter, reduced]);
 
-  // Keyboard: arrows move between chapters unless the user is typing or inside the learner screen.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement;
       if (t.closest("input, textarea, select, .lrn, .fs")) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
       if (e.key === "ArrowRight") next();
       else if (e.key === "ArrowLeft") back();
+      else if (e.key.toLowerCase() === "f") setMax((m) => !m);
+      else if (e.key === "Escape") setMax(false);
+      else if (e.key.toLowerCase() === "r") {
+        const st = useStore.getState();
+        st.setChapter(5);
+        startSimulation({ retry: st.passageId === "p1" && !st.custom, reduced: st.reducedMotion });
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [next, back]);
 
-  const light = LIGHT.has(chapter);
+  const span = SPAN.has(chapter);
   const show3d = view === "3d";
-
-  const sceneReady = useStore((s) => s.sceneReady);
-  const [forceReady, setForceReady] = useState(false);
-  useEffect(() => { const id = window.setTimeout(() => setForceReady(true), 9000); return () => window.clearTimeout(id); }, []);
   const veilDone = view === "2d" || sceneReady || forceReady;
 
-  // Keep CSS variables in sync with the real header and dock heights.
-  const topRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const root = document.documentElement;
-    const top = document.querySelector(".topbar");
-    const dock = document.querySelector(".dock");
-    const ro = new ResizeObserver(() => {
-      if (top) root.style.setProperty("--top-h", `${top.getBoundingClientRect().height}px`);
-      if (dock) root.style.setProperty("--dock-h", `${dock.getBoundingClientRect().height}px`);
-    });
-    if (top) ro.observe(top);
-    if (dock) ro.observe(dock);
-    return () => ro.disconnect();
-  }, []);
-
   return (
-    <div className="app" ref={topRef} data-world="dark" data-chapter={chapter} data-ready={veilDone ? "1" : "0"}>
-      <a className="skip-link" href="#main" onClick={(e) => { e.preventDefault(); setChapter(8); document.getElementById("main")?.focus(); }}>
-        {copy.nav.skip}
-      </a>
-      <div className="main">
-        <div className="stage-area">
-          <div className="stage-wrap" data-hidden={light ? "1" : "0"} data-dim={DIM.has(chapter) ? "1" : "0"}>
-            {show3d ? (
-              <Suspense fallback={null}>
-                <Scene3D />
-              </Suspense>
-            ) : (
-              <Device2D />
-            )}
-          </div>
-          <main id="main" tabIndex={-1} className="overlay" aria-label={copy.chapters[chapter].title}>
-            {chapter !== 0 && <h1 className="sr-only">{copy.chapters[chapter].title}</h1>}
-            <Suspense fallback={null}>
-              <ChapterView chapter={chapter} />
-            </Suspense>
-            {!light && chapter !== 0 && !DIM.has(chapter) && !(show3d && mode === "explore") && <p className="caption"><b>fig.{String(chapter + 1).padStart(2, "0")}</b>{copy.captions[chapter]}</p>}
-            {(light || chapter === 0 || DIM.has(chapter)) && <p className="sr-only">{copy.captions[chapter]}</p>}
-          </main>
+    <div className="app" data-chapter={chapter} data-span={span ? "1" : "0"} data-ready={veilDone ? "1" : "0"}>
+      <a className="skip-link" href="#main" onClick={(e) => { e.preventDefault(); setChapter(8); document.getElementById("main")?.focus(); }}>{copy.nav.skip}</a>
+      <Header />
+      <Rail />
+
+      <section className="viewport" data-max={max ? "1" : "0"} aria-label="Device viewport">
+        <div className="stage-wrap">
+          {chapter === 8 && !show3d ? <Learner2D /> : show3d ? <Suspense fallback={null}><Scene3D /></Suspense> : <Device2D />}
         </div>
+        <div className="vp-chrome" aria-hidden="true"><i /><i /><i /><i /></div>
+        <div className="vp-tag mono">fig.{String(chapter + 1).padStart(2, "0")} / {copy.chapters[chapter].rail.toLowerCase()}</div>
+        <button className="vp-full ghost-btn" onClick={() => setMax((m) => !m)} aria-pressed={max}>{max ? "Exit fullscreen" : "Fullscreen"} <kbd>F</kbd></button>
+        <div className="vp-read mono" aria-hidden="true">{show3d ? `3d · ${mode}` : "2d · guided"}</div>
+        <Briefing />
         {show3d && <ExploreHudSlot />}
         {show3d && <PartCard />}
-        <div className="stage-frame" aria-hidden="true"><i /><i /><i /><i /></div>
-        <TopBar />
-        <Dock />
+      </section>
+
+      <main id="main" tabIndex={-1} className="side" aria-label={copy.chapters[chapter].title}>
+        {chapter !== 0 && <h1 className="sr-only">{copy.chapters[chapter].title}</h1>}
+        <Suspense fallback={null}><ChapterView chapter={chapter} /></Suspense>
         {ARASAAC_IN_USE && <footer className="arasaac-credit">{ARASAAC_CREDIT} Non-commercial use.</footer>}
-      </div>
+      </main>
+
       {show3d && <HoverTip />}
       <FullscreenLearner />
       <div className="veil" aria-hidden={veilDone} data-done={veilDone ? "1" : "0"}>
-        <img className="veil-sun" src={iconSrc("sun")} alt="" width="96" height="96" />
+        <img className="veil-sun" src={iconSrc("sun")} alt="" width="64" height="64" />
         <Wordmark />
+        <span className="veil-bar"><i /></span>
       </div>
     </div>
   );

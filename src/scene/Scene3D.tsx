@@ -1,6 +1,6 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import { Bloom, ChromaticAberration, EffectComposer, Noise, ToneMapping, Vignette } from "@react-three/postprocessing";
+import { Bloom, EffectComposer, Noise, ToneMapping, Vignette } from "@react-three/postprocessing";
 import { BlendFunction, ToneMappingMode } from "postprocessing";
 import gsap from "gsap";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -111,9 +111,9 @@ function CameraRig() {
   useEffect(() => {
     if (mode !== "guided") return;
     const pose = CAMERA_POSES[chapter];
-    const mobile = size.width < 900;
+    const mobile = size.width < 600;
     const ox = mobile ? 0 : pose.offsetX;
-    const oy = mobile ? pose.offsetYMobile : 0;
+    const oy = mobile ? pose.offsetYMobile : pose.offsetY ?? 0;
     const r = rig.current;
     if (first.current) { r.ox = ox; r.oy = oy; }
     const instant = reduced || first.current;
@@ -232,10 +232,9 @@ function SceneContents({ lowPower }: { lowPower: boolean }) {
       <Cards sentences={passage.easyRead} />
       {!lowPower && (
         <EffectComposer multisampling={2}>
-          <Bloom intensity={1.1} luminanceThreshold={0.72} luminanceSmoothing={0.3} mipmapBlur radius={0.7} />
-          <ChromaticAberration offset={[0.0006, 0.0006] as never} radialModulation={false} modulationOffset={0} />
-          <Vignette eskil={false} offset={0.28} darkness={0.7} />
-          <Noise opacity={0.045} blendFunction={BlendFunction.SOFT_LIGHT} />
+          <Bloom intensity={0.55} luminanceThreshold={0.85} luminanceSmoothing={0.25} mipmapBlur radius={0.6} />
+          <Vignette eskil={false} offset={0.3} darkness={0.55} />
+          <Noise opacity={0.025} blendFunction={BlendFunction.SOFT_LIGHT} />
           <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
         </EffectComposer>
       )}

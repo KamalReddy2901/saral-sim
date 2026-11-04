@@ -49,8 +49,8 @@ export function Lighting({ quality, reducedMotion }: { quality: "high" | "low"; 
         shadow-mapSize={[1024, 1024]} shadow-camera-left={-34} shadow-camera-right={34} shadow-camera-top={34} shadow-camera-bottom={-34}
         shadow-camera-near={1} shadow-camera-far={100} shadow-bias={-0.0003} shadow-normalBias={0.03} shadow-radius={6}
       />
-      <pointLight ref={accent} position={[-14, 5, 12]} intensity={90} distance={55} decay={2} color="#ffc933" />
-      <pointLight position={[16, 6, -6]} intensity={40} distance={45} decay={2} color="#4de1d2" />
+      <pointLight ref={accent} position={[-14, 5, 12]} intensity={26} distance={34} decay={2} color="#ffc933" />
+      <pointLight position={[16, 6, -6]} intensity={14} distance={30} decay={2} color="#4de1d2" />
       <pointLight ref={socLight} position={[SOC_WORLD[0], SOC_WORLD[1] + 1.8, SOC_WORLD[2]]} intensity={0} distance={16} decay={2} color="#ffb347" />
 
       {/* glossy floor */}
@@ -58,14 +58,14 @@ export function Lighting({ quality, reducedMotion }: { quality: "high" | "low"; 
         <circleGeometry args={[220, 64]} />
         {high ? (
           <MeshReflectorMaterial
-            ref={floor as never} blur={[320, 110]} resolution={384} mixBlur={1.1} mixStrength={16} mirror={0.7} roughness={0.85} depthScale={1.2}
+            ref={floor as never} blur={[320, 110]} resolution={384} mixBlur={1.1} mixStrength={7} mirror={0.45} roughness={0.85} depthScale={1.2}
             minDepthThreshold={0.4} maxDepthThreshold={1.5} color="#06070d" metalness={0.7}
           />
         ) : (
           <meshStandardMaterial ref={floor} color="#06070d" roughness={0.5} metalness={0.6} />
         )}
       </mesh>
-      <Grid position={[0, 0.02, 0]} args={[200, 200]} cellSize={1} cellThickness={0.5} cellColor="#233156" sectionSize={6} sectionThickness={1} sectionColor="#3a5190" fadeDistance={58} fadeStrength={1.6} infiniteGrid userData={{ noShadow: true }} />
+      <Grid position={[0, 0.02, 0]} args={[200, 200]} cellSize={1} cellThickness={0.4} cellColor="#1b2540" sectionSize={6} sectionThickness={0.8} sectionColor="#2c3d70" fadeDistance={36} fadeStrength={2} infiniteGrid userData={{ noShadow: true }} />
       <LightPool />
       <ScanWall />
       <EnergyRings />

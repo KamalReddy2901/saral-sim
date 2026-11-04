@@ -39,3 +39,6 @@ First draft problems found and changed:
 
 ## Revision: teardown HUD
 The first version (navy and yellow glass panels) and a second flat-paper version were both dropped: the first read as generic dark-glass SaaS, the second was not dark or futuristic enough. The current language is described in README.md ("Design language"). It deliberately avoids gradient-glow blobs, rounded glass cards, and the usual display sans.
+
+## Revision 2: instrument workspace
+The loud HUD version (notched buttons, huge yellow headline) read as immature. The final language is quiet and structured: see README.md.

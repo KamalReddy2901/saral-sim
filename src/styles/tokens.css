@@ -1,47 +1,40 @@
 /*
-  Saral design language: "teardown HUD".
-  A dark instrument room. The product floats in light; everything else is thin lines, notched corners,
-  small mono readouts and pictogram glyphs. The one hot colour is the brand sun yellow; teal marks data.
-  The learner screen stays bright: the user's world glowing out of a dark technical one.
+  Saral design language: a quiet instrument workspace.
+  Three hairline-divided columns (chapters, 3D viewport, details), cool graphite surfaces, one signal-yellow accent,
+  teal for live data, serif for titles, mono for readouts, the product's pictograms as icons.
+  The learner screen is the only bright thing: the user's world, glowing out of the instrument.
 */
 :root {
-  --void: #05060a;
-  --deep: #0a0c13;
-  --panel: #0e111a;
-  --panel-2: #151927;
-  --line: rgba(255, 255, 255, 0.13);
-  --line-hot: rgba(255, 201, 51, 0.55);
-  --text: #eef1f8;
-  --text-soft: #a3abc0;
-  --sun: #ffc933;
-  --sun-deep: #e0a800;
-  --teal: #4de1d2;
-  --cobalt: #3b6bff;
-  --cobalt-strong: #1a36a0;
-  --leaf: #3fdc95;
-  --leaf-strong: #095c39;
-  --coral: #ff7a66;
-  --coral-strong: #9a2f1f;
-  --ink: #0b0d14;
+  --bg: #090b0f;
+  --surface: #0e1117;
+  --surface-2: #141922;
+  --surface-3: #1a202b;
+  --line: rgba(255, 255, 255, 0.075);
+  --line-2: rgba(255, 255, 255, 0.14);
+  --text: #e9ecf3;
+  --muted: #98a1b3;
+  --dim: #8791a6;
+  --accent: #ffc933;
+  --accent-ink: #1b1400;
+  --accent-soft: rgba(255, 201, 51, 0.12);
+  --teal: #5ad6c6;
+  --good: #52d69f;
+  --bad: #ff8070;
   --paper: #ffffff;
-  --mist: #eef1f8;
+  --ink: #0b0d14;
+  --cobalt-strong: #1a36a0;
+  --leaf-strong: #095c39;
+  --coral-strong: #9a2f1f;
 
-  --font-display: "Chakra Petch", system-ui, sans-serif;
-  --font-ui: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-data: "Chakra Petch", ui-monospace, Menlo, monospace;
+  --font-ui: "Geist Variable", "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, Menlo, monospace;
+  --font-serif: "Instrument Serif", Georgia, serif;
   --font-learner: "Atkinson Hyperlegible", system-ui, sans-serif;
 
-  --notch: 12px;
-  --ease: cubic-bezier(0.2, 0.9, 0.25, 1);
-  --hop: cubic-bezier(0.34, 1.4, 0.64, 1);
-  --top-h: 6rem;
-  --dock-h: 7rem;
-  --side-w: clamp(22rem, 28vw, 28rem);
-  --stage: #05060a;
-}
-[data-world="dark"], [data-world="light"] {
-  --bg: var(--void);
-  --fg: var(--text);
-  --fg-soft: var(--text-soft);
-  --link: var(--teal);
+  --r: 10px;
+  --r-lg: 14px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --rail-w: 256px;
+  --side-w: 360px;
+  --head-h: 52px;
 }

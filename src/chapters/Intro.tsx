@@ -1,21 +1,18 @@
 import { copy } from "../data/copy";
-import { useStore } from "../store/useStore";
+import { Panel } from "../ui/Panel";
 
+/** Side panel for chapter 0: how this simulation works. The headline itself lives in the viewport briefing. */
 export function Intro() {
-  const setChapter = useStore((s) => s.setChapter);
-  const view = useStore((s) => s.view);
   return (
-    <section className="hero" aria-labelledby="hero-title">
-      <h1 id="hero-title" className="hero-title">{copy.hero.headline.split(copy.hero.accent)[0]}<mark>{copy.hero.accent}</mark>{copy.hero.headline.split(copy.hero.accent)[1]}</h1>
-      <p className="hero-sub">{copy.hero.sub}</p>
-      <div className="hero-actions">
-        <button className="btn btn-primary" onClick={() => setChapter(1)}>{copy.hero.run}</button>
-        <button className="btn btn-ghost" onClick={() => setChapter(8)}>{copy.hero.learner}</button>
-      </div>
-      <ul className="hero-facts" aria-label="Key facts">
-        <li>Offline</li><li>On-device AI</li><li>Easy-read with pictograms</li>
+    <Panel title="How this simulation works">
+      <ul className="facts">
+        <li><strong>Offline.</strong> The device needs no internet and sends nothing anywhere.</li>
+        <li><strong>On-device AI.</strong> A small model runs on the Raspberry Pi itself.</li>
+        <li><strong>Easy-read with pictograms.</strong> Short sentences, one idea each, a picture where there is a match.</li>
+        <li><strong>Checks in plain code.</strong> The AI proposes, code verifies what the learner sees.</li>
       </ul>
-      {view === "2d" && <p className="hero-note">{copy.fallback2d}</p>}
-    </section>
+      <p className="muted">{copy.banner}</p>
+      <p className="muted">Use the chapters on the left, or the arrow keys. Press <kbd>F</kbd> to fullscreen the 3D viewport.</p>
+    </Panel>
   );
 }

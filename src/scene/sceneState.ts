@@ -16,7 +16,7 @@ export const S = {
   slot: 0, // cards slotting onto the display 0..1
   screen: 1, // display brightness
   away: 0, // 1 = Pi and USB stick slid out of frame (learner chapter)
-  bg: { r: 1, g: 0.58, b: 0.03 }, // backdrop colour, tweened per chapter (linear RGB)
+  bg: { r: 0.0018, g: 0.0021, b: 0.004 }, // backdrop colour, tweened per chapter (linear RGB)
   glowCol: { r: 1, g: 0.58, b: 0.03 }, // accent light colour (linear RGB)
   scan: 0, // 0..1 sweep of the scan wall
   hov: {} as Record<string, number>, // per-part hover amount 0..1

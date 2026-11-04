@@ -16,8 +16,6 @@ function gradientTexture(kind: "wall" | "pool"): CanvasTexture {
     const gr = g.createLinearGradient(0, 256, 0, 0);
     gr.addColorStop(0, "rgba(255,255,255,0.95)"); gr.addColorStop(0.08, "rgba(255,255,255,0.5)"); gr.addColorStop(1, "rgba(255,255,255,0)");
     g.fillStyle = gr; g.fillRect(0, 0, 256, 256);
-    g.fillStyle = "rgba(255,255,255,0.35)";
-    for (let x = 0; x < 256; x += 8) g.fillRect(x, 0, 1, 256);
   }
   const t = new CanvasTexture(c);
   t.colorSpace = SRGBColorSpace;
@@ -35,7 +33,7 @@ export function ScanWall() {
     const s = S.scan;
     m.visible = s > 0.001 && s < 0.999;
     m.position.z = -18 + s * 46;
-    mt.opacity = Math.sin(Math.PI * s) * 0.55;
+    mt.opacity = Math.sin(Math.PI * s) * 0.3;
     mt.color.setRGB(S.glowCol.r, S.glowCol.g, S.glowCol.b);
   });
   return (
@@ -82,7 +80,7 @@ export function LightPool() {
   return (
     <mesh rotation-x={-Math.PI / 2} position={[0, 0.04, 3]} userData={{ noShadow: true }}>
       <planeGeometry args={[78, 78]} />
-      <meshBasicMaterial ref={mat} map={tex} transparent opacity={0.5} depthWrite={false} blending={AdditiveBlending} toneMapped={false} />
+      <meshBasicMaterial ref={mat} map={tex} transparent opacity={0.28} depthWrite={false} blending={AdditiveBlending} toneMapped={false} />
     </mesh>
   );
 }

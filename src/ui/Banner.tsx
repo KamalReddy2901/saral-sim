@@ -1,11 +1,11 @@
 import { copy } from "../data/copy";
-import { iconSrc } from "../utils/pictograms";
 
 export function Banner() {
   return (
     <div className="banner" role="note">
-      <img src={iconSrc("question")} alt="" width="22" height="22" />
-      <span>{copy.banner}</span>
+      <i className="live" aria-hidden="true" />
+      <span className="mono">simulation</span>
+      <span>{copy.banner.replace(/^Simulation of the Saral prototype\.\s*/, "")}</span>
     </div>
   );
 }
