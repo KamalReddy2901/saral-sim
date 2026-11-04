@@ -32,7 +32,7 @@ export function Credits() {
               {openSource.map((o) => <li key={o.name}><strong>{o.name}</strong> {o.licence}</li>)}
             </ul>
             <h3>{c.fonts}</h3>
-            <p>Inter Tight and Instrument Serif (site) and Atkinson Hyperlegible (learner screen), all under the SIL Open Font License 1.1, self-hosted.</p>
+            <p>Chakra Petch (headings and data labels) and Atkinson Hyperlegible (body text and learner screen), all under the SIL Open Font License 1.1, self-hosted.</p>
             <h3>{c.pictograms}</h3>
             {ARASAAC_IN_USE ? (
               <p>{ARASAAC_CREDIT} Used for a non-commercial prototype.</p>

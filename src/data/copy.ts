@@ -67,6 +67,7 @@ export const copy = {
       { id: "sd", name: "microSD card", text: "Model and pictograms live here." },
       { id: "power", name: "Power lead", text: "USB-C. The only cable the device needs." },
       { id: "usb", name: "USB stick", text: "Carries a passage to the device. No network needed." },
+      { id: "eth", name: "Ethernet cable", text: "Not needed to run Saral. Click it to unplug or plug it back in." },
     ],
   },
   load: {

@@ -12,11 +12,10 @@ export const credits = {
 export const openSource: { name: string; licence: string; use: string }[] = [
   { name: "React, React DOM", licence: "MIT", use: "UI" },
   { name: "three.js", licence: "MIT", use: "3D rendering" },
-  { name: "@react-three/fiber, @react-three/drei", licence: "MIT", use: "3D in React" },
+  { name: "@react-three/fiber, @react-three/drei, @react-three/postprocessing", licence: "MIT", use: "3D in React" },
   { name: "zustand", licence: "MIT", use: "State" },
   { name: "GSAP", licence: "Standard no-charge licence (gsap.com/standard-license)", use: "Camera tweens" },
   { name: "Vite", licence: "MIT", use: "Build" },
-  { name: "Inter Tight (@fontsource-variable/inter-tight)", licence: "SIL Open Font License 1.1", use: "Site UI and headings" },
-  { name: "Instrument Serif (@fontsource/instrument-serif)", licence: "SIL Open Font License 1.1", use: "Accent type" },
-  { name: "Atkinson Hyperlegible (@fontsource/atkinson-hyperlegible)", licence: "SIL Open Font License 1.1", use: "Learner screen" },
+  { name: "Chakra Petch (@fontsource/chakra-petch)", licence: "SIL Open Font License 1.1", use: "Headings and data labels" },
+  { name: "Atkinson Hyperlegible (@fontsource/atkinson-hyperlegible)", licence: "SIL Open Font License 1.1", use: "Body text and learner screen" },
 ];

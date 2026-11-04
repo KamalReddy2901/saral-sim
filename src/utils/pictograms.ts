@@ -74,3 +74,8 @@ export const LEXICON_LEMMAS = Object.keys(LEXICON);
 
 export const ARASAAC_CREDIT =
   "Pictograms author: Sergio Palao. Origin: ARASAAC (http://www.arasaac.org). License: CC (BY-NC-SA). Owner: Government of Aragon (Spain).";
+
+/** Interface icons always use the project's own pictograms, never ARASAAC files. */
+export function iconSrc(name: string): string {
+  return `${import.meta.env.BASE_URL}pictograms/${name}.svg`;
+}

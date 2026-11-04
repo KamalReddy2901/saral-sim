@@ -5,6 +5,7 @@ import {
   CatmullRomCurve3, Color, DoubleSide, ExtrudeGeometry, InstancedMesh, MeshStandardMaterial, Object3D, Path, Shape, TubeGeometry, Vector3, type Group,
 } from "three";
 import { Hotspot } from "./Hotspot";
+import { partHandlers } from "./interactions";
 import { occluders } from "./hotspotStore";
 import { PI_POS, PI_SCALE } from "./layout";
 import { S } from "./sceneState";
@@ -22,7 +23,7 @@ const plastic = new MeshStandardMaterial({ color: "#0d1119", roughness: 0.5 });
 const gold = new MeshStandardMaterial({ color: "#f0c25a", metalness: 1, roughness: 0.18 });
 const cavity = new MeshStandardMaterial({ color: "#020305", roughness: 1 });
 const tongueBlack = new MeshStandardMaterial({ color: "#23283a", roughness: 0.5 });
-const tongueBlue = new MeshStandardMaterial({ color: "#7a66ff", roughness: 0.4 });
+const tongueBlue = new MeshStandardMaterial({ color: "#2f5bea", roughness: 0.4 });
 const tongueWhite = new MeshStandardMaterial({ color: "#e9edf5", roughness: 0.45 });
 const ledGreen = new MeshStandardMaterial({ color: "#14ff8a", emissive: "#14ff8a", emissiveIntensity: 2.2 });
 const ledAmber = new MeshStandardMaterial({ color: "#ffb020", emissive: "#ffb020", emissiveIntensity: 2.2 });
@@ -72,6 +73,7 @@ export function PiBoard({ showHotspots }: { showHotspots: boolean }) {
   const powerRef = useRef<Group>(null);
   const fanRef = useRef<Group>(null);
   const ethRef = useRef<Group>(null);
+  const rootRef = useRef<Group | null>(null);
   const socMat = useRef<MeshStandardMaterial>(null);
   const gpio = useRef<InstancedMesh>(null);
   const traceMats = useMemo(() => TRACES.map(() => new MeshStandardMaterial({ color: "#1f7a4a", emissive: new Color("#7fb0ff"), emissiveIntensity: 0, roughness: 0.5 })), []);
@@ -104,13 +106,15 @@ export function PiBoard({ showHotspots }: { showHotspots: boolean }) {
   useEffect(() => () => { pcb.dispose(); silk.dispose(); traceMats.forEach((m) => m.dispose()); cables.eth.dispose(); cables.power.dispose(); }, [pcb, silk, traceMats, cables]);
 
   useFrame((state, dt) => {
+    if (rootRef.current) { rootRef.current.position.x = PI_POS[0] - S.away * 30; rootRef.current.position.z = PI_POS[2] + S.away * 8; }
     const ex = S.ex;
     if (boardRef.current) boardRef.current.position.y = STANDOFF + ex.board * 14;
-    if (socRef.current) socRef.current.position.y = ex.soc * 20;
-    if (coolerRef.current) coolerRef.current.position.y = ex.cooler * 46;
-    if (sdRef.current) { sdRef.current.position.x = -ex.sd * 34; sdRef.current.position.y = -ex.sd * 24; }
-    if (powerRef.current) { powerRef.current.position.z = ex.power * 38; powerRef.current.position.x = -ex.power * 8; }
-    if (ethRef.current) { ethRef.current.position.x = S.cable * 110; ethRef.current.position.y = S.cable * 9; }
+    const hv = S.hov;
+    if (socRef.current) socRef.current.position.y = ex.soc * 20 + (hv.soc ?? 0) * 5;
+    if (coolerRef.current) coolerRef.current.position.y = ex.cooler * 46 + (hv.cooler ?? 0) * 6;
+    if (sdRef.current) { sdRef.current.position.x = -ex.sd * 34 - (hv.sd ?? 0) * 4; sdRef.current.position.y = -ex.sd * 24; }
+    if (powerRef.current) { powerRef.current.position.z = ex.power * 38 + (hv.power ?? 0) * 5; powerRef.current.position.x = -ex.power * 8; }
+    if (ethRef.current) { ethRef.current.position.x = S.cable * 110 + (hv.eth ?? 0) * 6; ethRef.current.position.y = S.cable * 9; }
     if (fanRef.current) fanRef.current.rotation.y += dt * (S.fan * 38);
     if (socMat.current) {
       socMat.current.emissive.copy(glowColor);
@@ -126,7 +130,7 @@ export function PiBoard({ showHotspots }: { showHotspots: boolean }) {
   const hx = (id: string, p: readonly [number, number, number]) => <Hotspot id={id} position={p} visible={showHotspots} />;
 
   return (
-    <group ref={occluders.pi} position={[PI_POS[0], PI_POS[1], PI_POS[2]]} scale={PI_SCALE}>
+    <group ref={(g) => { rootRef.current = g; (occluders.pi as { current: Group | null }).current = g; }} position={[PI_POS[0], PI_POS[1], PI_POS[2]]} scale={PI_SCALE}>
       {/* rubber standoffs */}
       {([[-39, -24.5], [-39, 24.5], [19, -24.5], [19, 24.5]] as const).map(([x, z]) => (
         <mesh key={`${x}${z}`} position={[x, STANDOFF / 2, z]}>
@@ -144,6 +148,14 @@ export function PiBoard({ showHotspots }: { showHotspots: boolean }) {
           <planeGeometry args={[BW, BD]} />
           <meshBasicMaterial map={silk} transparent depthWrite={false} polygonOffset polygonOffsetFactor={-2} toneMapped={false} side={DoubleSide} />
         </mesh>
+
+        {/* thin teal edge light around the board */}
+        {([[0, 27.8, 85, 0.5], [0, -27.8, 85, 0.5]] as const).map(([x, z, w, d], i) => (
+          <mesh key={`e${i}`} position={[x, TOP + 0.15, z]}><boxGeometry args={[w, 0.2, d]} /><meshStandardMaterial color="#4de1d2" emissive="#4de1d2" emissiveIntensity={1.6} /></mesh>
+        ))}
+        {([-42.2, 42.2] as const).map((x) => (
+          <mesh key={`s${x}`} position={[x, TOP + 0.15, 0]}><boxGeometry args={[0.5, 0.2, 55]} /><meshStandardMaterial color="#4de1d2" emissive="#4de1d2" emissiveIntensity={1.6} /></mesh>
+        ))}
 
         {/* glowing traces for the pulse */}
         {TRACES.map((t, i) => {
@@ -187,14 +199,15 @@ export function PiBoard({ showHotspots }: { showHotspots: boolean }) {
         <mesh position={[36, TOP + 8, -11.5]} material={darkMetal}><boxGeometry args={[17, 15, 0.8]} /></mesh>
 
         {/* Ethernet cable and plug: pulled out in chapter 4 */}
-        <group ref={ethRef}>
+        <group ref={ethRef} {...partHandlers("eth")}>
           <RoundedBox args={[22, 11, 12]} radius={0.8} smoothness={3} position={[55, TOP + 6.2, 17]}>
             <meshPhysicalMaterial color="#e3e9f4" roughness={0.18} transmission={0.25} thickness={2} />
           </RoundedBox>
           <RoundedBox args={[10, 13, 14]} radius={1.2} smoothness={3} position={[62, TOP + 6.2, 17]}>
-            <meshStandardMaterial color="#6a56f0" roughness={0.55} />
+            <meshStandardMaterial color="#13151f" roughness={0.55} />
           </RoundedBox>
-          <mesh geometry={cables.eth}><meshStandardMaterial color="#7a66ff" roughness={0.62} /></mesh>
+          {hx("eth", [62, TOP + 18, 17])}
+          <mesh geometry={cables.eth}><meshStandardMaterial color="#f4f6fb" roughness={0.5} /></mesh>
         </group>
 
         {/* front edge: two micro-HDMI, flat-cable connectors */}
@@ -210,7 +223,7 @@ export function PiBoard({ showHotspots }: { showHotspots: boolean }) {
         <mesh position={[-38, TOP + 2.5, 12]} material={ledGreen}><cylinderGeometry args={[0.9, 0.9, 0.4, 16]} /></mesh>
 
         {/* SoC heat spreader */}
-        <group ref={socRef}>
+        <group ref={socRef} {...partHandlers("soc")}>
           <RoundedBox args={[16, 2.4, 16]} radius={0.5} smoothness={3} position={[-10, TOP + 1.5, 2]}>
             <meshStandardMaterial ref={socMat} color="#dfe5f1" metalness={1} roughness={0.16} />
           </RoundedBox>
@@ -218,7 +231,7 @@ export function PiBoard({ showHotspots }: { showHotspots: boolean }) {
         </group>
 
         {/* active cooler: anodised heatsink, fin stack and a bladed fan */}
-        <group ref={coolerRef}>
+        <group ref={coolerRef} {...partHandlers("cooler")}>
           <group position={[-10, TOP + 2.7, 2]}>
             <RoundedBox args={[30, 2.5, 30]} radius={0.6} smoothness={2} position={[0, 1.25, 0]} material={anodised} />
             {Array.from({ length: 13 }, (_, i) => (
@@ -243,7 +256,7 @@ export function PiBoard({ showHotspots }: { showHotspots: boolean }) {
         </group>
 
         {/* microSD card, slides in underneath the left edge */}
-        <group ref={sdRef}>
+        <group ref={sdRef} {...partHandlers("sd")}>
           <RoundedBox args={[15, 1, 11]} radius={0.35} smoothness={2} position={[-34, -1.5, 0]} material={plastic} />
           <mesh position={[-29, -1.5, 0]} material={gold}><boxGeometry args={[5, 1.05, 8]} /></mesh>
           <mesh position={[-36, -0.95, 0]} material={tongueBlue}><boxGeometry args={[7, 0.08, 6]} /></mesh>
@@ -251,7 +264,7 @@ export function PiBoard({ showHotspots }: { showHotspots: boolean }) {
         </group>
 
         {/* USB-C power plug on the front edge */}
-        <group ref={powerRef}>
+        <group ref={powerRef} {...partHandlers("power")}>
           <RoundedBox args={[9, 3.8, 8]} radius={1.2} smoothness={3} position={[-31, TOP + 1.9, 25.5]} material={metal} />
           <RoundedBox args={[15, 8, 14]} radius={1.6} smoothness={3} position={[-31, TOP + 1.9, 34]} material={plastic} />
           <mesh geometry={cables.power}><meshStandardMaterial color="#2a3345" roughness={0.75} /></mesh>

@@ -1,16 +1,16 @@
 import { copy } from "../data/copy";
 import { CHAPTER_COUNT, useStore } from "../store/useStore";
+import { iconSrc } from "../utils/pictograms";
 import { Banner } from "./Banner";
+
+/** One pictogram per chapter: the navigation is made of the product's own visual language. */
+export const CHAPTER_ICONS = ["sun", "question", "hand", "book", "cross", "light", "tick", "plant", "leader", "up", "seed", "earth"] as const;
 
 export function Wordmark() {
   return (
     <span className="wordmark">
-      <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
-        <rect width="32" height="32" rx="10" fill="url(#wm)" /><defs><linearGradient id="wm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#d9d2ff" /><stop offset="1" stopColor="#ffc9a8" /></linearGradient></defs>
-        <path d="M9 21c0-6 4-10 14-11-1 9-5 13-11 13-1.2 0-2.200-.5-3-1.500z" fill="#0a0a0b" />
-        <path d="M9 23c3-4 6-7 10-9" stroke="#e6dcff" strokeWidth="1.600" strokeLinecap="round" fill="none" />
-      </svg>
-      <span>{copy.brand}</span>
+      <span className="wordmark-tile"><img src={iconSrc("sun")} alt="" width="30" height="30" /></span>
+      <span className="wordmark-text">saral</span>
     </span>
   );
 }
@@ -32,11 +32,11 @@ export function TopBar() {
             <button aria-pressed={mode === "explore"} onClick={() => setMode("explore")} disabled={view === "2d"}>{copy.nav.explore}</button>
           </div>
           {canUse3d && (
-            <button className="tool-btn" onClick={() => setView(view === "3d" ? "2d" : "3d")}>
+            <button className="chip-btn" onClick={() => setView(view === "3d" ? "2d" : "3d")}>
               {view === "3d" ? copy.nav.view2d : copy.nav.view3d}
             </button>
           )}
-          <button className="tool-btn tool-accent" onClick={() => setChapter(8)}>{copy.nav.skip}</button>
+          <button className="chip-btn chip-accent" onClick={() => setChapter(8)}>{copy.nav.skip}</button>
         </div>
       </div>
       <Banner />
@@ -44,9 +44,9 @@ export function TopBar() {
   );
 }
 
-const Chevron = ({ dir }: { dir: "l" | "r" }) => (
-  <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d={dir === "l" ? "M12 4l-6 6 6 6" : "M8 4l6 6-6 6"} />
+const Arrow = ({ dir }: { dir: "l" | "r" }) => (
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d={dir === "l" ? "M15 5l-7 7 7 7" : "M9 5l7 7-7 7"} />
   </svg>
 );
 
@@ -57,17 +57,18 @@ export function Dock() {
   const back = useStore((s) => s.back);
   return (
     <nav className="dock" aria-label={copy.nav.chapters}>
-      <button className="dock-btn" onClick={back} disabled={chapter === 0} aria-label={copy.nav.back}><Chevron dir="l" /></button>
-      <div className="dock-center">
-        <div className="dock-label">
-          <span className="dock-num" aria-label={`Chapter ${chapter + 1} of ${CHAPTER_COUNT}`}>{String(chapter + 1).padStart(2, "0")}<small>/{CHAPTER_COUNT}</small></span>
-          <strong>{copy.chapters[chapter].title}</strong>
-        </div>
-        <ol className="dock-ticks">
+      <div className="dock-label">
+        <b className="dock-num" aria-label={`Chapter ${chapter + 1} of ${CHAPTER_COUNT}`}>{String(chapter + 1).padStart(2, "0")}</b>
+        <strong>{copy.chapters[chapter].title}</strong>
+      </div>
+      <div className="dock-row">
+        <button className="key-btn" onClick={back} disabled={chapter === 0} aria-label={copy.nav.back}><Arrow dir="l" /></button>
+        <ol className="tiles">
           {copy.chapters.map((c, i) => (
             <li key={c.id}>
-              <button className="tick" data-state={i < chapter ? "done" : i === chapter ? "now" : "next"} aria-label={c.title} aria-current={i === chapter ? "step" : undefined} onClick={() => setChapter(i)}>
-                <span className="tick-tip" aria-hidden="true">{c.rail}</span>
+              <button className="tile" data-state={i < chapter ? "done" : i === chapter ? "now" : "next"} aria-label={c.title} aria-current={i === chapter ? "step" : undefined} onClick={() => setChapter(i)}>
+                <img src={iconSrc(CHAPTER_ICONS[i])} alt="" width="32" height="32" draggable={false} />
+                <span className="tile-tip" aria-hidden="true">{c.rail}</span>
               </button>
             </li>
           ))}
@@ -75,8 +76,8 @@ export function Dock() {
         <select className="dock-select" aria-label={copy.nav.chapters} value={chapter} onChange={(e) => setChapter(Number(e.target.value))}>
           {copy.chapters.map((c, i) => (<option key={c.id} value={i}>{`${i + 1}. ${c.title}`}</option>))}
         </select>
+        <button className="key-btn key-go" onClick={next} disabled={chapter === CHAPTER_COUNT - 1} aria-label={copy.nav.next}><Arrow dir="r" /></button>
       </div>
-      <button className="dock-btn dock-next" onClick={next} disabled={chapter === CHAPTER_COUNT - 1} aria-label={copy.nav.next}><Chevron dir="r" /></button>
     </nav>
   );
 }

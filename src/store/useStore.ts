@@ -19,6 +19,7 @@ interface State {
   canUse3d: boolean;
   reducedMotion: boolean;
   sceneReady: boolean;
+  panelOpen: boolean;
   fullscreen: boolean;
 
   runStatus: RunStatus;
@@ -35,6 +36,7 @@ interface State {
   learnerKey: number;
 
   setChapter: (n: number) => void;
+  setPanelOpen: (b: boolean) => void;
   next: () => void;
   back: () => void;
   setMode: (m: State["mode"]) => void;
@@ -60,6 +62,7 @@ export const useStore = create<State>((set, get) => ({
   canUse3d: true,
   reducedMotion: false,
   sceneReady: false,
+  panelOpen: true,
   fullscreen: false,
 
   runStatus: "idle",
@@ -74,7 +77,8 @@ export const useStore = create<State>((set, get) => ({
   learner: { textSize: 1, theme: "normal" },
   learnerKey: 0,
 
-  setChapter: (n) => set({ chapter: Math.max(0, Math.min(CHAPTER_COUNT - 1, n)), fullscreen: false }),
+  setChapter: (n) => set({ chapter: Math.max(0, Math.min(CHAPTER_COUNT - 1, n)), fullscreen: false, panelOpen: true }),
+  setPanelOpen: (panelOpen) => set({ panelOpen }),
   next: () => get().setChapter(get().chapter + 1),
   back: () => get().setChapter(get().chapter - 1),
   setMode: (mode) => set({ mode }),

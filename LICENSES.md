@@ -10,8 +10,7 @@
 | vite, @vitejs/plugin-react, vitest, typescript | MIT / Apache-2.0 |
 | @playwright/test | Apache-2.0 |
 | axe-core | MPL-2.0 |
-| @fontsource-variable/inter-tight (Inter Tight) | SIL Open Font License 1.1 |
-| @fontsource/instrument-serif (Instrument Serif) | SIL Open Font License 1.1 |
+| @fontsource/chakra-petch (Chakra Petch) | SIL Open Font License 1.1 |
 | @fontsource/atkinson-hyperlegible (Atkinson Hyperlegible) | SIL Open Font License 1.1 |
 
 Run `npm ls --all` for the full dependency tree; transitive licences are those of the respective packages.

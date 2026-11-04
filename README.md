@@ -29,6 +29,11 @@ Static output in `dist/`, no backend, no environment variables.
 
 Edit only `src/data/metrics.config.ts`: set `source: "measured"`, fill `measuredOn` (hardware, OS, ExecuTorch version, date), replace the values, rebuild. Every badge switches from *Simulated* to *Measured on Raspberry Pi*, and the dashboard, model card, impact numbers and timers update. A `null` value shows "To be measured". Team names and links: `src/data/credits.config.ts`.
 
+## Design language
+Dark "teardown HUD": near-black rooms, thin lines, notched corners and corner brackets, small Chakra Petch readouts (`fig.03 / the device`), and the product's own pictograms as the chapter navigation. Sun yellow is the one hot colour, teal marks data. The learner screen stays bright, so the user's world glows out of a dark technical one. Headings are Chakra Petch; body text is Atkinson Hyperlegible.
+
+3D is the main stage: dark studio with a glossy floor and fading grid, accent lights that change colour per chapter, a scan sheet that sweeps through the device on every chapter change, bloom, vignette and grain. Interactions: hover lifts a part and shows its name; click opens it; click the Ethernet plug to pull it out or plug it in; click the USB stick to eject or insert it; click the screen to open the learner chapter; click the chip or cooler to start a run (chapter 5) or spin the fan; the picture leans toward the pointer; side panels fold away ("hide panel"). Explore mode adds free orbit, a pull-apart slider, fly-to-part on click, and a reset button.
+
 ## What is in it
 
 Twelve chapters (0 to 11): intro, the barrier, the device (exploded 3D with keyboard-focusable hotspots), load a passage (plus a basic-mode preview for your own text), offline proof, the local AI run (signature moment), checks (scripted retry), pictograms, the learner screen (rendered on the 3D display and full-screen), results, impact, credits. Guided and Explore modes. A 2D guided view takes over when WebGL is missing, the device is low-power, or the visitor chooses it.

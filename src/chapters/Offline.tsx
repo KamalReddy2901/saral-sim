@@ -7,7 +7,7 @@ export function WifiIcon({ on }: { on: boolean }) {
   return (
     <svg viewBox="0 0 48 48" width="44" height="44" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" aria-hidden="true" className={on ? "wifi on" : "wifi off"}>
       <path d="M6 20a26 26 0 0 1 36 0" /><path d="M13 27a16 16 0 0 1 22 0" /><path d="M20 34a7 7 0 0 1 8 0" /><circle cx="24" cy="40" r="2" fill="currentColor" />
-      {!on && <path d="M7 7l34 34" stroke="var(--coral)" strokeWidth="5" />}
+      {!on && <path d="M7 7l34 34" stroke="#f0644f" strokeWidth="5" />}
     </svg>
   );
 }

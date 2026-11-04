@@ -16,9 +16,9 @@ export function makeSilkscreen(): CanvasTexture {
   const box = (x: number, z: number, w: number, h: number) => g.strokeRect(X(x - w / 2), Y(z - h / 2), w * mm, h * mm);
   box(-10, 2, 19, 19); box(14, -2, 18, 18); box(-33, -6, 15, 15); box(-28, 16, 10, 10);
   g.beginPath(); g.moveTo(X(-27.4), Y(-18.5)); g.lineTo(X(23.4), Y(-18.5)); g.stroke();
-  g.font = "600 34px Inter Tight Variable, sans-serif";
+  g.font = "600 34px Chakra Petch, sans-serif";
   g.fillText("SARAL PI", X(-22), Y(24));
-  g.font = "500 22px Inter Tight Variable, sans-serif";
+  g.font = "500 22px Chakra Petch, sans-serif";
   g.fillText("illustration, not to scale", X(-22), Y(27));
   g.fillText("GPIO", X(-34), Y(-22.5));
   g.fillText("ETH", X(26), Y(11));
@@ -81,7 +81,7 @@ export function makeCardTexture(content: CardContent, onUpdate: () => void): Can
       tx = 224;
     }
     g.fillStyle = "#0e1a2b";
-    g.font = '700 38px "Atkinson Hyperlegible", Inter Tight Variable, sans-serif';
+    g.font = '700 38px "Atkinson Hyperlegible", Chakra Petch, sans-serif';
     g.textBaseline = "alphabetic";
     const maxW = c.width - tx - 28;
     const words = content.text.split(" ");

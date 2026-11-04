@@ -8,8 +8,9 @@ import { AI } from "./chapters/AI";
 import { FullscreenLearner, LearnerChapter } from "./chapters/LearnerChapter";
 import { prefersReducedMotion, useStore } from "./store/useStore";
 import { Dock, TopBar, Wordmark } from "./ui/ChapterBar";
+import { ExploreHud, HoverTip, PartCard } from "./ui/SceneUi";
 import { detectCapabilities, modeFromUrl } from "./utils/capabilities";
-import { ARASAAC_CREDIT, ARASAAC_IN_USE } from "./utils/pictograms";
+import { ARASAAC_CREDIT, ARASAAC_IN_USE, iconSrc } from "./utils/pictograms";
 import { Device2D } from "./scene/Device2D";
 
 const Scene3D = lazy(() => import("./scene/Scene3D"));
@@ -42,9 +43,15 @@ function ChapterView({ chapter }: { chapter: number }) {
   }
 }
 
+function ExploreHudSlot() {
+  const mode = useStore((s) => s.mode);
+  return mode === "explore" ? <ExploreHud /> : null;
+}
+
 export function App() {
   const chapter = useStore((s) => s.chapter);
   const view = useStore((s) => s.view);
+  const mode = useStore((s) => s.mode);
   const next = useStore((s) => s.next);
   const back = useStore((s) => s.back);
   const setChapter = useStore((s) => s.setChapter);
@@ -131,18 +138,22 @@ export function App() {
             <Suspense fallback={null}>
               <ChapterView chapter={chapter} />
             </Suspense>
-            {!light && chapter !== 0 && !DIM.has(chapter) && <p className="caption">{copy.captions[chapter]}</p>}
+            {!light && chapter !== 0 && !DIM.has(chapter) && !(show3d && mode === "explore") && <p className="caption"><b>fig.{String(chapter + 1).padStart(2, "0")}</b>{copy.captions[chapter]}</p>}
             {(light || chapter === 0 || DIM.has(chapter)) && <p className="sr-only">{copy.captions[chapter]}</p>}
           </main>
         </div>
+        {show3d && <ExploreHudSlot />}
+        {show3d && <PartCard />}
+        <div className="stage-frame" aria-hidden="true"><i /><i /><i /><i /></div>
         <TopBar />
         <Dock />
         {ARASAAC_IN_USE && <footer className="arasaac-credit">{ARASAAC_CREDIT} Non-commercial use.</footer>}
       </div>
+      {show3d && <HoverTip />}
       <FullscreenLearner />
       <div className="veil" aria-hidden={veilDone} data-done={veilDone ? "1" : "0"}>
+        <img className="veil-sun" src={iconSrc("sun")} alt="" width="96" height="96" />
         <Wordmark />
-        <span className="veil-bar"><i /></span>
       </div>
     </div>
   );
