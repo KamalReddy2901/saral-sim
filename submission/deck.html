@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Saral: supporting document</title>
+<style>
+@font-face{font-family:Geist;src:url(../node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2);font-weight:100 900}
+@font-face{font-family:GeistMono;src:url(../node_modules/@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2);font-weight:100 900}
+@font-face{font-family:Serif;src:url(../node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2)}
+@font-face{font-family:Serif;font-style:italic;src:url(../node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2)}
+@page{size:1920px 1080px;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0c12;--panel:#121722;--line:#26304a;--tx:#eef1f8;--mu:#aab4c8;--ac:#6ea8ff;--te:#4de1d2;--am:#ffc857;--rd:#ff8a7a}
+html,body{background:var(--bg);color:var(--tx);font-family:Geist,system-ui,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.s{width:1920px;height:1080px;position:relative;overflow:hidden;page-break-after:always;padding:96px 110px 120px;background:
+ radial-gradient(900px 500px at 88% -10%,rgba(110,168,255,.16),transparent 70%),radial-gradient(700px 420px at -5% 105%,rgba(77,225,210,.09),transparent 70%),var(--bg)}
+.top{position:absolute;left:110px;right:110px;top:38px;display:flex;justify-content:space-between;font:500 22px GeistMono;color:var(--mu);letter-spacing:.02em}
+.top b{color:var(--tx);font:600 26px Geist;letter-spacing:0}.top i{font:italic 28px Serif;color:var(--mu)}
+.foot{position:absolute;left:110px;right:110px;bottom:32px;display:flex;justify-content:space-between;align-items:center;font-size:22px;color:var(--mu)}
+.pill{display:inline-flex;align-items:center;gap:12px;background:rgba(110,168,255,.14);border:1.5px solid var(--ac);color:var(--tx);border-radius:999px;padding:10px 22px;font-weight:600;font-size:23px;text-decoration:none}
+.pill u{text-decoration:none;color:var(--ac)}
+.k{font:500 22px GeistMono;color:var(--te);letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px}
+h1{font:400 112px/1 Serif;letter-spacing:-.01em}
+h2{font:400 68px/1.05 Serif;letter-spacing:-.005em;margin-bottom:26px;max-width:1500px}
+h3{font:600 30px/1.2 Geist;margin-bottom:10px}
+p,li{font-size:29px;line-height:1.42;color:var(--mu)}
+p b,li b,strong{color:var(--tx);font-weight:600}
+.lead{font-size:34px;line-height:1.38;color:var(--tx)}
+.card{background:var(--panel);border:1.5px solid var(--line);border-radius:22px;padding:30px 34px}
+.shot{border-radius:18px;border:1.5px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.55);display:block;width:100%}
+.cap{font:500 21px GeistMono;color:var(--mu);margin-top:14px}
+.sim{display:inline-block;font:600 21px GeistMono;color:var(--am);border:1.5px solid var(--am);border-radius:8px;padding:3px 12px}
+.row{display:flex;gap:44px}.col{flex:1;min-width:0}
+ul{list-style:none}li{padding-left:34px;position:relative;margin:10px 0}li:before{content:"";position:absolute;left:4px;top:16px;width:12px;height:12px;border-radius:3px;background:var(--ac)}
+.num{display:inline-flex;width:54px;height:54px;border-radius:16px;background:var(--ac);color:#04122b;font:700 30px Geist;align-items:center;justify-content:center;flex:none}
+.qr{background:#fff;border-radius:22px;padding:20px;width:230px;height:230px}.qr img{width:100%;height:100%;display:block}
+table{border-collapse:collapse;width:100%}th,td{text-align:left;vertical-align:top;padding:18px 22px;font-size:26px;line-height:1.35;border-bottom:1.5px solid var(--line)}
+th{font:500 22px GeistMono;color:var(--te);text-transform:uppercase;letter-spacing:.05em}td{color:var(--mu)}td:first-child{color:var(--tx);font-weight:600;width:30%}
+.flow{display:flex;align-items:stretch;gap:16px}
+.node{flex:1;border-radius:20px;padding:22px 18px;text-align:center;font-weight:600;font-size:26px;line-height:1.25}
+.node small{display:block;font-weight:400;font-size:21px;color:var(--mu);margin-top:8px}
+.ai{background:rgba(110,168,255,.16);border:1.5px solid var(--ac)}.code{background:rgba(77,225,210,.12);border:1.5px solid var(--te)}.io{background:var(--panel);border:1.5px solid var(--line)}
+.arr{align-self:center;color:var(--mu);font-size:34px}
+.tag{display:inline-block;font:600 20px GeistMono;border-radius:8px;padding:4px 12px;margin-right:10px}
+.tag.ai{color:var(--ac)}.tag.code{color:var(--te)}
+</style></head><body>
+
+<!-- 1 COVER -->
+<section class="s">
+  <div class="top"><span><b>Saral</b> <i>simulation</i></span><span>Namma AI Hackathon · Problem Statement 1</span></div>
+  <div style="display:flex;gap:70px;height:100%;align-items:center;margin-top:20px">
+    <div style="width:760px">
+      <div class="k">Offline Edge AI · Raspberry Pi · ExecuTorch</div>
+      <h1>Saral</h1>
+      <p class="lead" style="margin:22px 0 34px">An offline study aid that turns any short passage into an easy-read lesson, with pictures and simple questions, for learners with Down syndrome.</p>
+      <div class="card" style="display:flex;gap:30px;align-items:center;border-color:var(--ac);background:rgba(110,168,255,.1)">
+        <div class="qr"><img src="qr.svg" alt="QR code to the simulation"></div>
+        <div>
+          <div class="k" style="margin-bottom:8px">Our main demo is a website</div>
+          <h3 style="font-size:34px">Explore the 3D simulation</h3>
+          <a class="pill" style="margin-top:14px;font-size:27px" href="https://saral-sim.pages.dev/">saral-sim.pages.dev <u>↗</u></a>
+          <p style="font-size:22px;margin-top:14px">Scan or click. Opens in any modern browser. No sign-in.</p>
+        </div>
+      </div>
+      <p style="font-size:24px;margin-top:30px"><b>The Primes</b> · Kamal, Medha, Shruti · BMS Institute of Management and Technology (BMSIT&amp;M)</p>
+    </div>
+    <div style="flex:1"><img class="shot" src="img/ch00.jpg" alt="Saral simulation home screen"><div class="cap">The simulation: a 3D Raspberry Pi device you can orbit, pull apart and unplug.</div></div>
+  </div>
+  <div class="foot"><span>This is a <b>simulation</b> of the prototype. Example outputs were prepared by the team; every metric is labelled Simulated or Measured.</span><span>1 / 11</span></div>
+</section>
+
+<!-- 2 START HERE -->
+<section class="s">
+  <div class="top"><span><b>Saral</b> <i>simulation</i></span><span>Start here</span></div>
+  <div class="k">The best way to judge Saral</div>
+  <h2>Five minutes in the simulation shows the whole idea</h2>
+  <div class="row" style="margin-top:6px">
+    <div style="width:760px">
+      <div style="display:flex;gap:22px;align-items:flex-start;margin-bottom:24px"><span class="num">1</span><div><h3>Open the link, press “Start the tour”</h3><p style="font-size:26px">12 short chapters, each under a minute. Use the arrow keys.</p></div></div>
+      <div style="display:flex;gap:22px;align-items:flex-start;margin-bottom:24px"><span class="num">2</span><div><h3>Drag the 3D device, pull it apart</h3><p style="font-size:26px">Chapter 3. Click the Ethernet plug in chapter 5 to prove it runs offline.</p></div></div>
+      <div style="display:flex;gap:22px;align-items:flex-start;margin-bottom:24px"><span class="num">3</span><div><h3>Run the pipeline, watch the checks</h3><p style="font-size:26px">Chapters 6 and 7: the AI writes, plain code checks, a retry fixes it.</p></div></div>
+      <div style="display:flex;gap:22px;align-items:flex-start;margin-bottom:24px"><span class="num">4</span><div><h3>Try the learner screen yourself</h3><p style="font-size:26px">Chapter 9: large print, one idea per screen, two big answers. You can also paste your own passage.</p></div></div>
+      <a class="pill" style="font-size:28px;padding:14px 28px" href="https://saral-sim.pages.dev/">Open saral-sim.pages.dev <u>↗</u></a>
+    </div>
+    <div style="flex:1"><img class="shot" src="img/ch02.jpg" alt="The device pulled apart in 3D"><div class="cap">Chapter 3 · the device pulled apart: display, Raspberry Pi 5, cooler, microSD, USB stick.</div></div>
+  </div>
+  <div class="foot"><span>Everything in the site is static and offline-friendly: no accounts, no tracking, nothing loaded from other servers.</span><span>2 / 11</span></div>
+</section>
+
+<!-- 3 BARRIER -->
+<section class="s">
+  <div class="top"><span><b>Saral</b> <i>simulation</i></span><span>The barrier and the learner</span></div>
+  <div class="k">One clearly identified barrier</div>
+  <h2>Standard study text is written for readers who can follow long, abstract sentences</h2>
+  <div class="row">
+    <div style="width:820px">
+      <h3>The barrier</h3>
+      <p>Textbook passages use long sentences, several ideas at once and hard words, with no picture support. An easy-read version of a given passage is <b>not available on demand</b>, least of all without internet.</p>
+      <h3 style="margin-top:24px">Who it is for</h3>
+      <p>Learners with Down syndrome who benefit from simplified text and visual support, using the device directly. <b>Learners differ widely</b>, so we assume no single reading level: text size and contrast are adjustable.</p>
+      <h3 style="margin-top:22px">Why these design choices</h3>
+      <p>Guidance for teachers says print should be <b>bigger and bolder</b> (Bird, SEN Magazine 80). Easy-to-Read standards ask for short sentences, one idea each (Inclusion Europe).</p>
+    </div>
+    <div style="flex:1"><img class="shot" src="img/ch01.jpg" alt="Before and after comparison of one sentence"><div class="cap">Chapter 2 · the same sentence, before (16 words, two ideas) and after (8 words, one idea, a picture).</div></div>
+  </div>
+  <div class="foot"><a class="pill" href="https://saral-sim.pages.dev/">Try it: saral-sim.pages.dev <u>↗</u></a><span>3 / 11</span></div>
+</section>
+
+<!-- 4 SOLUTION -->
+<section class="s">
+  <div class="top"><span><b>Saral</b> <i>simulation</i></span><span>The solution</span></div>
+  <div class="k">Everything runs on the Raspberry Pi</div>
+  <h2>From passage to checked easy-read lesson, offline</h2>
+  <div class="flow" style="margin-top:14px">
+    <div class="node io">Passage<small>150–300 words</small></div><span class="arr">→</span>
+    <div class="node ai">AI: easy-read<small>5–7 short sentences</small></div><span class="arr">→</span>
+    <div class="node code">Check A<small>length, level, faithful</small></div><span class="arr">→</span>
+    <div class="node ai">AI: questions<small>yes/no or two-choice</small></div><span class="arr">→</span>
+    <div class="node code">Check B<small>answers valid</small></div><span class="arr">→</span>
+    <div class="node io">Pictograms<small>local library</small></div><span class="arr">→</span>
+    <div class="node io">Learner screen<small>large print</small></div>
+  </div>
+  <p style="font-size:24px;margin:16px 0 34px"><span class="tag ai">AI model, on device</span><span class="tag code">Plain code checks</span> If a check fails: retry up to 2 times, then a safe fallback (selected original sentences, or a template question).</p>
+  <div class="row">
+    <div class="card col"><div class="k" style="font-size:20px">Input</div><p style="color:var(--tx)">One educational passage of about <b>150–300 words</b> (the organiser’s passage on the day).</p></div>
+    <div class="card col"><div class="k" style="font-size:20px">Output 1 and 2</div><p style="color:var(--tx)">An easy-read summary of <b>5–7 sentences</b>, and <b>3 or more</b> yes/no or two-choice questions, each answerable from the text on screen.</p></div>
+    <div class="card col"><div class="k" style="font-size:20px">Output 3</div><p style="color:var(--tx)">A highlighted <b>key word</b> per sentence and a <b>verified pictogram</b> where an exact match exists. No picture beats a wrong picture.</p></div>
+  </div>
+  <div class="foot"><span>No cloud AI inference. Wi-Fi off, Ethernet unplugged, with an offline-check script as proof.</span><span>4 / 11</span></div>
+</section>
+
+<!-- 5 CHECKS -->
+<section class="s">
+  <div class="top"><span><b>Saral</b> <i>simulation</i></span><span>Trust: AI proposes, code verifies</span></div>
+  <div class="k">Chapter 7 in the simulation</div>
+  <h2>A small model can slip, so nothing reaches the learner unchecked</h2>
+  <div class="row">
+    <div style="width:700px">
+      <h3>Check A: the easy-read text</h3>
+      <p>Counts words per sentence, estimates reading level, and confirms names, numbers and key terms come from the passage.</p>
+      <h3 style="margin-top:22px">Check B: the questions</h3>
+      <p>Every question must have a valid answer that can be found in the text on screen. Weak questions are dropped.</p>
+      <h3 style="margin-top:22px">When the AI fails</h3>
+      <p>Retry up to twice, then fall back to selected original sentences and template questions, so <b>three verified questions always appear</b>.</p>
+      <p style="font-size:24px;margin-top:20px">These are rough indicators, not proof of accessibility or complete factual correctness. We report failures.</p>
+    </div>
+    <div style="flex:1"><img class="shot" src="img/checks_fail.jpg" alt="Check A finds a 19 word sentence"><div class="cap">The walkthrough: Check A finds a 19-word sentence (limit 12). The retry fixes it.</div></div>
+  </div>
+  <div class="foot"><a class="pill" href="https://saral-sim.pages.dev/?chapter=6">Open the Checks chapter <u>↗</u></a><span>5 / 11</span></div>
+</section>
+
+<!-- 6 LEARNER -->
+<section class="s">
+  <div class="top"><span><b>Saral</b> <i>simulation</i></span><span>What the learner sees</span></div>
+  <div class="k">Chapter 9 · the large-print screen</div>
+  <h2>One idea per screen, two big answers, gentle feedback</h2>
+  <div class="row">
+    <div class="col"><img class="shot" src="img/learner_quiz.jpg" alt="Learner screen question"><div class="cap">A question: one picture, large type, Yes or No.</div></div>
+    <div class="col"><img class="shot" src="img/learner_ok.jpg" alt="Learner screen feedback"><div class="cap">Feedback: encouraging, and it shows the supporting sentence.</div></div>
+  </div>
+  <div class="row" style="margin-top:26px">
+    <div class="col"><ul><li>Very large, high-contrast type; seven themes</li><li>Icons always come with words, never colour alone</li></ul></div>
+    <div class="col"><ul><li>No timers, no scores, no accounts</li><li>Keyboard and touch; a wrong answer says “Let’s look again”</li></ul></div>
+  </div>
+  <div class="foot"><a class="pill" href="https://saral-sim.pages.dev/?chapter=8">Try the learner screen <u>↗</u></a><span>6 / 11</span></div>
+</section>
+
+<!-- 7 DELIVERABLES -->
+<section class="s">
+  <div class="top"><span><b>Saral</b> <i>simulation</i></span><span>Mandatory deliverables</span></div>
+  <div class="k">Mapped to the problem statement</div>
+  <h2>How Saral meets each of the five deliverables</h2>
+  <table>
+    <tr><th>Organiser requirement</th><th>How Saral meets it</th><th>Evidence on the day</th></tr>
+    <tr><td>1 · Barrier, learner group, how the PoC helps</td><td>Standard text is hard to read and unsupported by pictures. Learners with Down syndrome get easy-read text with pictograms on the device.</td><td>Slides 3–4; the simulation</td></tr>
+    <tr><td>2 · Organiser’s passage, approved lightweight model, ExecuTorch on Raspberry Pi</td><td>A quantized small instruct model exported with ExecuTorch (XNNPACK). Final model is subject to organiser approval and compatibility testing.</td><td>Live run on the organiser’s passage</td></tr>
+    <tr><td>3 · Short summary and 3+ quiz questions</td><td>5–7 sentence easy-read summary, 3–4 questions. Terminal output always works; the screen is an extra.</td><td>Terminal and large-print screen</td></tr>
+    <tr><td>4 · No cloud inference; time, model, size or memory</td><td>Wi-Fi off, Ethernet unplugged, offline-check script. We report time per stage, model and file size, and peak memory with and without the screen.</td><td>Network-off demo; results table measured on the Pi</td></tr>
+    <tr><td>5 · Impact with one example from the passage</td><td>A before/after sentence from the organiser’s passage, with word counts and the picture used, and a plain statement of what we do not claim.</td><td>Impact slide filled in live</td></tr>
+  </table>
+  <div class="foot"><a class="pill" href="https://saral-sim.pages.dev/">See it working: saral-sim.pages.dev <u>↗</u></a><span>7 / 11</span></div>
+</section>
+
+<!-- 8 OFFLINE + MEASURE -->
+<section class="s">
+  <div class="top"><span><b>Saral</b> <i>simulation</i></span><span>Offline proof and measurement</span></div>
+  <div class="k">Honest numbers</div>
+  <h2>Offline proof, and a results table with honest labels</h2>
+  <div class="row">
+    <div class="col"><img class="shot" src="img/offline.jpg" alt="Offline proof chapter"><div class="cap">Chapter 5 · cable out, Wi-Fi off, the device keeps working.</div></div>
+    <div class="col"><img class="shot" src="img/results.jpg" alt="Results with Simulated labels"><div class="cap">Chapter 10 · every number says <span class="sim">Simulated</span> or Measured.</div></div>
+  </div>
+  <div class="row" style="margin-top:26px">
+    <div class="col"><h3>What we will measure on the Pi</h3><p style="font-size:25px">Model, quantization, file size · peak memory (model alone, and with the screen) · time per stage and total, tokens per second · average and longest sentence, reading grade before and after · first-attempt check pass rate, fallback use, pictogram coverage.</p></div>
+    <div class="col"><h3>How we measure</h3><p style="font-size:25px">Real Pi, Wi-Fi off. A warm-up, then <b>three runs per passage</b>, reported as ranges. At least <b>five passages</b> from different subjects and a two-person quality review. Figures in the simulation are placeholders until then.</p></div>
+  </div>
+  <div class="foot"><a class="pill" href="https://saral-sim.pages.dev/?chapter=4">Open the offline proof <u>↗</u></a><span>8 / 11</span></div>
+</section>
+
+<!-- 9 MODEL + DEPENDENCIES + RISKS -->
+<section class="s">
+  <div class="top"><span><b>Saral</b> <i>simulation</i></span><span>Model, dependencies and risks</span></div>
+  <div class="k">Feasibility</div>
+  <h2>A small model on a Pi, with a plan for what could go wrong</h2>
+  <div class="row">
+    <div class="col card">
+      <h3>Model and runtime (examples to confirm)</h3>
+      <ul><li><b>Primary:</b> Llama 3.2 1B Instruct</li><li><b>Backup:</b> Qwen3 0.6B or SmolLM2</li><li><b>Research option:</b> Gemma 3 1B, only if its ExecuTorch route is verified</li><li>Quantized for XNNPACK; the exact scheme (for example 8-bit activations, 4-bit weights) is <b>finalised after testing</b></li><li>Choice order: organiser-approved, memory fit with the screen running, format reliability, speed</li></ul>
+    </div>
+    <div class="col card">
+      <h3>To confirm before the build</h3>
+      <ul><li>Approved model list and Raspberry Pi model, RAM, OS</li><li>ExecuTorch version and export requirements</li><li>Display and other hardware; Linux dev environment</li></ul>
+      <h3 style="margin-top:20px">Top risks</h3>
+      <ul><li>Broken format or long sentences: few-shot examples, targeted retries, extractive fallback</li><li>Slow or memory-heavy: smaller model, capped tokens, terminal path always works</li></ul>
+    </div>
+  </div>
+  <div class="foot"><span>Still to be confirmed with the organisers: approved models, Raspberry Pi model and display.</span><span>9 / 11</span></div>
+</section>
+
+<!-- 10 HONEST LIMITS -->
+<section class="s">
+  <div class="top"><span><b>Saral</b> <i>simulation</i></span><span>What we do and do not claim</span></div>
+  <div class="k">Trustworthy accessibility</div>
+  <h2>Careful claims, backed by what the research does and does not show</h2>
+  <div class="row">
+    <div class="col card">
+      <h3>We do not claim</h3>
+      <ul><li><b>No learning-outcome claims.</b> We have not tested with learners.</li><li><b>Not certified Easy-to-Read.</b> That needs review by people with intellectual disabilities, which is planned.</li><li>The faithfulness check works at word level and cannot catch every meaning error.</li></ul>
+      <p style="font-size:25px;margin-top:14px">A 2026 systematic review found the evidence that Easy Read improves comprehension is limited and mostly low quality. So we claim only measurable output quality, and we plan validation with special educators.</p>
+    </div>
+    <div class="col card">
+      <h3>References</h3>
+      <ul style="font-size:24px">
+        <li style="font-size:24px">Bird, G. Helping children with Down’s syndrome to learn. <i>SEN Magazine</i>, issue 80.</li>
+        <li style="font-size:24px">Inclusion Europe. <i>Information for all</i>: European standards for making information easy to read and understand.</li>
+        <li style="font-size:24px">UK Department of Health and Social Care. Down syndrome needs profile paper (2025).</li>
+        <li style="font-size:24px">Wilson, H. et al. Easy Read health information for people with intellectual disabilities: a systematic review. <i>JARID</i> 39(1), 2026.</li>
+        <li style="font-size:24px">PyTorch ExecuTorch documentation (docs.pytorch.org/executorch).</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><span>Pictograms in the simulation are original drawings. The device library will use an open set with a verified licence, credited in full.</span><span>10 / 11</span></div>
+</section>
+
+<!-- 11 PLAN + TEAM -->
+<section class="s">
+  <div class="top"><span><b>Saral</b> <i>simulation</i></span><span>Plan and team</span></div>
+  <div class="row" style="gap:70px">
+    <div style="flex:1">
+      <div class="k">Plan</div>
+      <h2 style="font-size:60px">From proposal to the live day</h2>
+      <div class="card" style="margin-bottom:14px;padding:20px 28px"><b style="color:var(--tx);font-size:28px">By 6 Nov</b><p style="font-size:25px">Submit this proposal. Ask about approved models, the Pi and the display.</p></div>
+      <div class="card" style="margin-bottom:14px;padding:20px 28px"><b style="color:var(--tx);font-size:28px">Now to 10 Nov</b><p style="font-size:25px">Pipeline, checks, pictograms and screen. ExecuTorch on a Pi as soon as we can get one.</p></div>
+      <div class="card" style="margin-bottom:14px;padding:20px 28px"><b style="color:var(--tx);font-size:28px">11 to 13 Nov, if shortlisted</b><p style="font-size:25px">Finalist training, benchmarks on the real Pi, quality review, rehearsal.</p></div>
+      <div class="card" style="padding:20px 28px"><b style="color:var(--tx);font-size:28px">14 Nov, live day, NASSCOM office</b><p style="font-size:25px">Organiser’s passage, benchmarks, offline proof, impact example, GitHub submission.</p></div>
+      <p style="font-size:24px;margin-top:16px"><b>Future scope:</b> Kannada and other languages, offline read-aloud, more subjects, review by people with Down syndrome and special educators.</p>
+    </div>
+    <div style="width:640px">
+      <div class="k">Team</div>
+      <h3 style="font-size:40px;font-family:Serif;font-weight:400">The Primes</h3>
+      <p style="margin-bottom:14px">Kamal · Medha · Shruti<br>BMS Institute of Management and Technology (BMSIT&amp;M)</p>
+      <p style="font-size:25px">Contact: kamalreddi2901@gmail.com<br>Code: <a style="color:var(--ac)" href="https://github.com/KamalReddy2901/saral-sim">github.com/KamalReddy2901/saral-sim</a></p>
+      <div class="card" style="margin-top:26px;text-align:center;border-color:var(--ac);background:rgba(110,168,255,.1)">
+        <div class="qr" style="margin:0 auto 16px"><img src="qr.svg" alt="QR code to the simulation"></div>
+        <a class="pill" style="font-size:26px" href="https://saral-sim.pages.dev/">saral-sim.pages.dev <u>↗</u></a>
+        <p style="font-size:22px;margin-top:12px">Please try the simulation. It is the fastest way to see Saral.</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Saral: offline easy-read study aid. Namma AI Hackathon, Problem Statement 1. A simulation of the prototype.</span><span>11 / 11</span></div>
+</section>
+</body></html>

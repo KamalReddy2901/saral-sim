@@ -14,7 +14,7 @@ const EASY = p1.easyRead[3];
 const CAUSES = [
   { icon: "book", text: "Long, abstract sentences" },
   { icon: "question", text: "No visual support" },
-  { icon: "cross", text: "Easy-read versions are rarely available, least of all offline" },
+  { icon: "cross", text: "No easy-read version is available on demand, least of all offline" },
 ] as const;
 
 /** Before / after of the same idea. Drag the divider (or use the arrow keys) to wipe between them. */

@@ -50,7 +50,7 @@ export const copy = {
   barrier: {
     title: "The barrier",
     statement:
-      "Because standard study text uses long, abstract sentences with no visual support, and easy-read versions are rarely available (least of all offline), learners with Down syndrome often cannot read and understand a short passage on their own, or check whether they understood it.",
+      "Because standard study text uses long, abstract sentences with no visual support, and an easy-read version of a given passage is not available on demand (least of all offline), many learners with Down syndrome find it hard to read and understand a short passage on their own, or to check whether they understood it.",
     before: "Original passage",
     after: "Saral easy-read result",
     words: "words",
