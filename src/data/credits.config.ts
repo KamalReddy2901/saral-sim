@@ -1,12 +1,10 @@
-// Placeholders for the team to fill in before linking the site from the PDF.
 export const credits = {
   hackathon: "Namma AI Hackathon, Problem Statement 1: AI for Inclusive Education (Offline Smart Learning Assistant)",
-  teamName: "[Team name: to be filled in]",
-  members: ["[Member 1: to be filled in]", "[Member 2: to be filled in]", "[Member 3: to be filled in]"],
-  college: "[College: to be filled in]",
-  repoUrl: "https://github.com/your-org/saral", // PLACEHOLDER
-  pdfUrl: "", // PLACEHOLDER: link to the 2-page supporting PDF
-  contact: "[Contact: to be filled in]",
+  teamName: "The Primes",
+  members: ["Kamal", "Medha", "Shruti"],
+  college: "BMS Institute of Management and Technology (BMSIT&M)",
+  repoUrl: "https://github.com/KamalReddy2901/saral-sim",
+  contact: "kamalreddi2901@gmail.com",
 };
 
 export const openSource: { name: string; licence: string; use: string }[] = [

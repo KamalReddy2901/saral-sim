@@ -2,15 +2,13 @@ import { copy } from "../data/copy";
 import { credits, openSource } from "../data/credits.config";
 import { ARASAAC_CREDIT, ARASAAC_IN_USE, LEXICON_SIZE } from "../utils/pictograms";
 
-const isPlaceholder = (s: string) => s.startsWith("[") || s.includes("your-org") || s === "";
-
 export function Credits() {
   const c = copy.credits;
   return (
     <section className="panel panel-full" tabIndex={0} data-world="light" aria-labelledby="credits-title">
       <div className="panel-inner credits">
         <h2 id="credits-title" className="sr-only">{c.title}</h2>
-        <p className="muted">{credits.hackathon}</p>
+        <p className="muted"><strong>This website is a simulation.</strong> It is a software model of the Saral device, not the device itself. Figures shown are labelled Simulated or Measured. {credits.hackathon}</p>
         <div className="cred-grid">
           <div>
             <h3>{c.team}</h3>
@@ -22,8 +20,7 @@ export function Credits() {
             </ul>
             <h3>{c.links}</h3>
             <ul>
-              <li><a href={credits.repoUrl} rel="noreferrer">{c.repo}</a> {isPlaceholder(credits.repoUrl) && <span className="muted">({c.placeholder})</span>}</li>
-              <li>{credits.pdfUrl ? <a href={credits.pdfUrl} rel="noreferrer">{c.pdf}</a> : <>{c.pdf} <span className="muted">({c.placeholder})</span></>}</li>
+              <li><a href={credits.repoUrl} rel="noreferrer">{c.repo}</a></li>
             </ul>
           </div>
           <div>
